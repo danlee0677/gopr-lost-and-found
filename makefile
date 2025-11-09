@@ -3,7 +3,7 @@ CC = g++
 
 # Source and output
 SRC_DIR = src
-SRC = $(SRC_DIR)/main.c $(SRC_DIR)/login.c
+SRC = $(SRC_DIR)/main.c $(SRC_DIR)/draw.c $(SRC_DIR)/menu.c $(SRC_DIR)/login.c $(SRC_DIR)/register.c
 OUT_DIR = build
 OUT = $(OUT_DIR)/main.exe
 
