@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <string.h>
 #include "../include/raylib.h"
 #include "../include/constants.h"
 #include "../include/login.h"
@@ -12,6 +14,7 @@ scene num - description
 */
 
 static int scene = 0;
+bool typing = false;
 
 int main() {
     InitWindow(WIDTH, HEIGHT, "main");
@@ -20,7 +23,8 @@ int main() {
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        DrawText(TextFormat("scene: %d", scene), 30, 30, 30, BLACK);
+        DrawText(TextFormat("scene: %d", scene), 20, HEIGHT - 40, 30, BLACK);
+        DrawText(TextFormat("typing: %d", typing), 20, HEIGHT - 80, 30, BLACK);
 
         switch (scene) {
             case 0: // main menu
@@ -33,17 +37,48 @@ int main() {
             case 1: // login
                 LoginScreen();
 
-                if (IsKeyPressed(KEY_U)) LoginUsernameSelected();
-                if (IsKeyPressed(KEY_P)) LoginPasswordSelected();
-                if (IsKeyPressed(KEY_B)) scene = 0;
+                extern int loginSelected;
+                extern char loginUsername[100];
+                extern char loginPassword[100];
 
-                break;
-            case 2: // register
-                RegisterScreen();
+                DrawText(TextFormat("loginSelected: %d", loginSelected), 20, HEIGHT - 120, 30, BLACK);
+                DrawText(TextFormat("loginUsername: %s", loginUsername), 20, HEIGHT - 160, 30, BLACK);
+                DrawText(TextFormat("loginPassword: %s", loginPassword), 20, HEIGHT - 200, 30, BLACK);
 
-                if (IsKeyPressed(KEY_U)) RegisterUsernameSelected();
-                if (IsKeyPressed(KEY_P)) RegisterPasswordSelected();
-                if (IsKeyPressed(KEY_B)) scene = 0;
+                if (typing) {
+                    if (IsKeyPressed(KEY_ENTER)) {
+                        typing = false;
+                        loginSelected = 0;
+                    } else if (IsKeyPressed(KEY_BACKSPACE)) {
+                        if (loginSelected == 1) {
+                            loginUsername[strlen(loginUsername) - 1] = '\0';
+                        } else if (loginSelected == 2) {
+                            loginPassword[strlen(loginPassword) - 1] = '\0';
+                        }
+                    } else {
+                        if (loginSelected == 1) {
+                            loginUsername[strlen(loginUsername)] = GetCharPressed();
+                        } else if (loginSelected == 2) {
+                            loginPassword[strlen(loginPassword)] = GetCharPressed();
+                        }
+                    }
+                } else {
+                    if (IsKeyPressed(KEY_U)) {
+                        typing = true;
+                        loginSelected = 1;
+                    } else if (IsKeyPressed(KEY_P)) {
+                        typing = true;
+                        loginSelected = 2;
+                    } else if (IsKeyPressed(KEY_L)) {
+                        
+                    } else if (IsKeyPressed(KEY_B)) {
+                        LoginReset();
+                        typing = false;
+                        scene = 0;
+                    }
+                }
+                
+                
 
                 break;
         }

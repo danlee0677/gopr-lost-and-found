@@ -3,10 +3,6 @@
 
 void MainMenuScreen();
 void LoginScreen();
-void RegisterScreen();
-void LoginUsernameSelected();
-void LoginPasswordSelected();
-void RegisterUsernameSelected();
-void RegisterPasswordSelected();
+void LoginReset();
 
 #endif
