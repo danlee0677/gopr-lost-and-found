@@ -41,12 +41,14 @@ int main() {
                 LoginScreen();
 
                 extern int loginSelected;
+                extern bool loginValid;
                 extern char loginUsername[100];
                 extern char loginPassword[100];
 
                 DrawText(TextFormat("loginSelected: %d", loginSelected), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("loginUsername: %s", loginUsername), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("loginPassword: %s", loginPassword), 20, HEIGHT - 200, 30, BLACK);
+                DrawText(TextFormat("loginValid: %d", loginValid), 20, HEIGHT - 160, 30, BLACK);
+                DrawText(TextFormat("loginUsername: %s", loginUsername), 20, HEIGHT - 200, 30, BLACK);
+                DrawText(TextFormat("loginPassword: %s", loginPassword), 20, HEIGHT - 240, 30, BLACK);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
@@ -74,13 +76,13 @@ int main() {
                         loginSelected = 2;
                     } else if (IsKeyPressed(KEY_L)) {
                         if (LoginCheck()) {
-                            LoginReset();
-                            typing = false;
+                            loginValid = 0;
                             scene = 3;
                         }
+                        LoginReset();
                     } else if (IsKeyPressed(KEY_B)) {
                         LoginReset();
-                        typing = false;
+                        loginValid = 0;
                         scene = 0;
                     }
                 }
@@ -90,12 +92,16 @@ int main() {
                 RegisterScreen();
 
                 extern int registerSelected;
+                extern bool registerValid;
                 extern char registerUsername[100];
                 extern char registerPassword[100];
+                extern char registerPassword2[100];
 
                 DrawText(TextFormat("registerSelected: %d", registerSelected), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("registerUsername: %s", registerUsername), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("registerPassword: %s", registerPassword), 20, HEIGHT - 200, 30, BLACK);
+                DrawText(TextFormat("registerValid: %d", registerValid), 20, HEIGHT - 160, 30, BLACK);
+                DrawText(TextFormat("registerUsername: %s", registerUsername), 20, HEIGHT - 200, 30, BLACK);
+                DrawText(TextFormat("registerPassword: %s", registerPassword), 20, HEIGHT - 240, 30, BLACK);
+                DrawText(TextFormat("registerPassword2: %s", registerPassword2), 20, HEIGHT - 280, 30, BLACK);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
@@ -106,12 +112,16 @@ int main() {
                             registerUsername[strlen(registerUsername) - 1] = '\0';
                         } else if (registerSelected == 2) {
                             registerPassword[strlen(registerPassword) - 1] = '\0';
+                        } else if (registerSelected == 3) {
+                            registerPassword2[strlen(registerPassword2) - 1] = '\0';
                         }
                     } else {
                         if (registerSelected == 1) {
                             registerUsername[strlen(registerUsername)] = GetCharPressed();
                         } else if (registerSelected == 2) {
                             registerPassword[strlen(registerPassword)] = GetCharPressed();
+                        } else if (registerSelected == 3) {
+                            registerPassword2[strlen(registerPassword2)] = GetCharPressed();
                         }
                     }
                 } else {
@@ -121,19 +131,22 @@ int main() {
                     } else if (IsKeyPressed(KEY_P)) {
                         typing = true;
                         registerSelected = 2;
-                    } else if (IsKeyPressed(KEY_L)) {
+                    } else if (IsKeyPressed(KEY_C)) {
+                        typing = true;
+                        registerSelected = 3;
+                    } else if (IsKeyPressed(KEY_R)) {
                         if (RegisterCheck()) {
-                            RegisterReset();
-                            typing = false;
-                            scene = 3;
+                            registerValid = 0;
+                            scene = 0;
                         }
+                        RegisterReset();
                     } else if (IsKeyPressed(KEY_B)) {
                         RegisterReset();
-                        typing = false;
+                        registerValid = 0;
                         scene = 0;
                     }
                 }
-                
+
                 break;
         }
 
