@@ -7,8 +7,8 @@
 
 int loginSelected = 0;
 int loginValid = 0;
-char loginUsername[100];
-char loginPassword[100];
+char loginUsername[50];
+char loginPassword[50];
 
 void LoginScreen() {
     //draw the login screen text in the middle of the screen

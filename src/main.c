@@ -6,6 +6,7 @@
 #include "../include/menu.h"
 #include "../include/login.h"
 #include "../include/register.h"
+#include "../include/lobby.h"
 
 /*
 scene num - description
@@ -16,8 +17,9 @@ scene num - description
 4 - 
 */
 
-static int scene = 0;
+static int scene = 3;
 bool typing = false;
+char schoolNumber[50];
 
 int main() {
     InitWindow(WIDTH, HEIGHT, "LOST AND FOUND");
@@ -38,12 +40,12 @@ int main() {
 
                 break;
             case 1: // login
-                LoginScreen();
-
                 extern int loginSelected;
                 extern bool loginValid;
-                extern char loginUsername[100];
-                extern char loginPassword[100];
+                extern char loginUsername[50];
+                extern char loginPassword[50];
+
+                LoginScreen();
 
                 DrawText(TextFormat("loginSelected: %d", loginSelected), 20, HEIGHT - 120, 30, BLACK);
                 DrawText(TextFormat("loginValid: %d", loginValid), 20, HEIGHT - 160, 30, BLACK);
@@ -77,6 +79,7 @@ int main() {
                     } else if (IsKeyPressed(KEY_L)) {
                         if (LoginCheck()) {
                             loginValid = 0;
+                            strcpy(schoolNumber, loginUsername);
                             scene = 3;
                         }
                         LoginReset();
@@ -93,9 +96,9 @@ int main() {
 
                 extern int registerSelected;
                 extern bool registerValid;
-                extern char registerUsername[100];
-                extern char registerPassword[100];
-                extern char registerPassword2[100];
+                extern char registerUsername[50];
+                extern char registerPassword[50];
+                extern char registerPassword2[50];
 
                 DrawText(TextFormat("registerSelected: %d", registerSelected), 20, HEIGHT - 120, 30, BLACK);
                 DrawText(TextFormat("registerValid: %d", registerValid), 20, HEIGHT - 160, 30, BLACK);
@@ -147,6 +150,13 @@ int main() {
                     }
                 }
 
+                break;
+            case 3: // lobby
+                extern char lobbySchoolNumber[50];
+
+                strcpy(lobbySchoolNumber, schoolNumber);
+
+                LobbyScreen();
                 break;
         }
 

@@ -50,5 +50,5 @@ void NewRectangle(float x, float y, float width, float height, int offset, Color
     
     Vector2 new_pos = offsetPosition(pos, size, offset);
     Rectangle rec = {new_pos.x, new_pos.y, width, height};
-    DrawRectangleRoundedLinesEx(rec, 0.2, 0, 8, color);
+    DrawRectangleRoundedLinesEx(rec, 0.1, 0, 8, color);
 }
