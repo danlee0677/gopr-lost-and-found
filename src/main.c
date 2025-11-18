@@ -57,17 +57,11 @@ int main() {
                         typing = false;
                         loginSelected = 0;
                     } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (loginSelected == 1) {
-                            loginUsername[strlen(loginUsername) - 1] = '\0';
-                        } else if (loginSelected == 2) {
-                            loginPassword[strlen(loginPassword) - 1] = '\0';
-                        }
+                        if (loginSelected == 1) loginUsername[strlen(loginUsername) - 1] = '\0';
+                        else if (loginSelected == 2) loginPassword[strlen(loginPassword) - 1] = '\0';
                     } else {
-                        if (loginSelected == 1) {
-                            loginUsername[strlen(loginUsername)] = GetCharPressed();
-                        } else if (loginSelected == 2) {
-                            loginPassword[strlen(loginPassword)] = GetCharPressed();
-                        }
+                        if (loginSelected == 1) loginUsername[strlen(loginUsername)] = GetCharPressed();
+                        else if (loginSelected == 2) loginPassword[strlen(loginPassword)] = GetCharPressed();
                     }
                 } else {
                     if (IsKeyPressed(KEY_U)) {
@@ -92,13 +86,13 @@ int main() {
 
                 break;
             case 2: // register
-                RegisterScreen();
-
                 extern int registerSelected;
                 extern bool registerValid;
                 extern char registerUsername[50];
                 extern char registerPassword[50];
                 extern char registerPassword2[50];
+
+                RegisterScreen();
 
                 DrawText(TextFormat("registerSelected: %d", registerSelected), 20, HEIGHT - 120, 30, BLACK);
                 DrawText(TextFormat("registerValid: %d", registerValid), 20, HEIGHT - 160, 30, BLACK);
@@ -111,21 +105,13 @@ int main() {
                         typing = false;
                         registerSelected = 0;
                     } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (registerSelected == 1) {
-                            registerUsername[strlen(registerUsername) - 1] = '\0';
-                        } else if (registerSelected == 2) {
-                            registerPassword[strlen(registerPassword) - 1] = '\0';
-                        } else if (registerSelected == 3) {
-                            registerPassword2[strlen(registerPassword2) - 1] = '\0';
-                        }
+                        if (registerSelected == 1) registerUsername[strlen(registerUsername) - 1] = '\0';
+                        else if (registerSelected == 2) registerPassword[strlen(registerPassword) - 1] = '\0';
+                        else if (registerSelected == 3) registerPassword2[strlen(registerPassword2) - 1] = '\0';
                     } else {
-                        if (registerSelected == 1) {
-                            registerUsername[strlen(registerUsername)] = GetCharPressed();
-                        } else if (registerSelected == 2) {
-                            registerPassword[strlen(registerPassword)] = GetCharPressed();
-                        } else if (registerSelected == 3) {
-                            registerPassword2[strlen(registerPassword2)] = GetCharPressed();
-                        }
+                        if (registerSelected == 1) registerUsername[strlen(registerUsername)] = GetCharPressed();
+                        else if (registerSelected == 2) registerPassword[strlen(registerPassword)] = GetCharPressed();
+                        else if (registerSelected == 3) registerPassword2[strlen(registerPassword2)] = GetCharPressed();
                     }
                 } else {
                     if (IsKeyPressed(KEY_U)) {
@@ -153,10 +139,37 @@ int main() {
                 break;
             case 3: // lobby
                 extern char lobbySchoolNumber[50];
+                extern char lobbySearch[1000];
+                extern int lobbySelected;
+                extern int lobbyPage;
+                extern int lobbyTags;
 
                 strcpy(lobbySchoolNumber, schoolNumber);
 
                 LobbyScreen();
+
+                DrawText(TextFormat("schoolNumber: %s", lobbySchoolNumber), 20, HEIGHT - 120, 30, BLACK);
+                DrawText(TextFormat("search: %s", lobbySearch), 20, HEIGHT - 160, 30, BLACK);
+                DrawText(TextFormat("selected: %d", lobbySelected), 20, HEIGHT - 200, 30, BLACK);
+                DrawText(TextFormat("page: %d", lobbyPage), 20, HEIGHT - 240, 30, BLACK);
+                DrawText(TextFormat("tags: %d", lobbyTags), 20, HEIGHT - 280, 30, BLACK);
+
+                if (typing) {
+                    if (IsKeyPressed(KEY_ENTER)) {
+                        typing = false;
+                        lobbySelected = 0;
+                    } else if (IsKeyPressed(KEY_BACKSPACE)) lobbySearch[strlen(lobbySearch) - 1] = '\0';
+                    else lobbySearch[strlen(lobbySearch)] = GetCharPressed();
+                } else {
+                    if (IsKeyPressed(KEY_S)) {
+                        typing = true;
+                        lobbySelected = 1;
+                    } else if (IsKeyPressed(KEY_T)) lobbySelected = 2;
+                    else if (IsKeyPressed(KEY_P)) scene = 4;
+                    else if (IsKeyPressed(KEY_D)) scene = 5;
+                    else if (IsKeyPressed(KEY_L)) scene = 0;
+                }
+
                 break;
         }
 
