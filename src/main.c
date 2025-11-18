@@ -51,7 +51,7 @@ int main() {
                 DrawText(TextFormat("loginValid: %d", loginValid), 20, HEIGHT - 160, 30, BLACK);
                 DrawText(TextFormat("loginUsername: %s", loginUsername), 20, HEIGHT - 200, 30, BLACK);
                 DrawText(TextFormat("loginPassword: %s", loginPassword), 20, HEIGHT - 240, 30, BLACK);
-
+                
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
                         typing = false;
