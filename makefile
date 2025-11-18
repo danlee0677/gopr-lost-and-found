@@ -14,6 +14,7 @@ LIBS = -Llib/ -lraylib -lopengl32 -lgdi32 -lwinmm
 # Force rebuild every time
 .PHONY: all
 all:
+	mkdir -p $(OUT_DIR)
 	$(CC) $(SRC) -o $(OUT) $(INCLUDE) $(LIBS)
 
 # Clean rule
