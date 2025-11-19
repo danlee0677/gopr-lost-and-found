@@ -2,6 +2,7 @@
 #include <string.h>
 #include "../include/raylib.h"
 #include "../include/constants.h"
+#include "../include/models.h"
 #include "../include/draw.h"
 #include "../include/lobby.h"
 
@@ -11,15 +12,6 @@ int lobbySelected = 0;
 int lobbyPage = 0;
 int lobbyTags = 0;
 bool lobbyTagsSelected[6] = {false, false, false, false, false, false};
-
-typedef enum {
-    ELECTRONICS, // 전자기기
-    CLOTHINGS, // 옷
-    BAGS, // 가방
-    STATIONERY, // 학용품
-    PERSONAL, // 개인물품: 지갑, 신분증 등
-    SPECIAL, // 기타 분류
-} TagEnum;
 
 void LobbyScreen() {
     NewRectangle(50, 50, WIDTH / 2 + 200, 100, TOP_LEFT, BLACK);

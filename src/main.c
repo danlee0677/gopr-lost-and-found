@@ -7,6 +7,8 @@
 #include "../include/login.h"
 #include "../include/register.h"
 #include "../include/lobby.h"
+#include "../include/models.h"
+#include "../include/post.h"
 
 /*
 scene num - description
@@ -14,16 +16,21 @@ scene num - description
 1 - login
 2 - register
 3 - lobby
-4 - 
+4 - post
+5 - 
 */
 
-static int scene = 3;
+static int scene = 4;
 bool typing = false;
 char schoolNumber[50];
+extern LostItemList *lostItems;
 
 int main() {
     InitWindow(WIDTH, HEIGHT, "LOST AND FOUND");
     SetTargetFPS(60);
+
+    load_lost_item_list(lostItems);
+
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -171,6 +178,61 @@ int main() {
                 }
 
                 break;
+            case 4: // post
+                extern char postSchoolNumber[50];
+                extern int postSelected;
+                extern bool postTagsSelected[6];
+                extern char postTitle[MAX_TITLE_LEN];
+                extern char postContent[MAX_CONTENT_LEN];
+                extern char postTargetUser[MAX_USERNAME_LEN];
+
+                strcpy(postSchoolNumber, schoolNumber);
+                PostScreen();
+
+                DrawText(TextFormat("schoolNumber: %s", lobbySchoolNumber), 20, HEIGHT - 120, 30, BLACK);
+
+                if (typing) {
+                    if (IsKeyPressed(KEY_ENTER)) {
+                        typing = false;
+                        postSelected = 0;
+                    } else if (IsKeyPressed(KEY_BACKSPACE)) {
+                        if (postSelected == 1 && strlen(postTitle) > 0) postTitle[strlen(postTitle) - 1] = '\0';
+                        else if (postSelected == 2 && strlen(postContent) > 0) postContent[strlen(postContent) - 1] = '\0';
+                        else if (postSelected == 3 && strlen(postTargetUser) > 0) postTargetUser[strlen(postTargetUser) - 1] = '\0';
+                    } else {
+                        // todo: word count limit
+                        if (postSelected == 1 && strlen(postTitle) < MAX_TITLE_LEN - 1) postTitle[strlen(postTitle)] = GetCharPressed();
+                        else if (postSelected == 2 && strlen(postContent) < MAX_CONTENT_LEN - 1) postContent[strlen(postContent)] = GetCharPressed();
+                        else if (postSelected == 3 && strlen(postTargetUser) < MAX_USERNAME_LEN - 1) postTargetUser[strlen(postTargetUser)] = GetCharPressed();
+                    }
+                } else {
+                    if (IsKeyPressed(KEY_T)) {
+                        typing = true;
+                        postSelected = 1;
+                    } else if (IsKeyPressed(KEY_C)) {
+                        typing = true;
+                        postSelected = 2;
+                    } else if (IsKeyPressed(KEY_U)) {
+                        typing = true;
+                        postSelected = 3;
+                    } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
+                        postTagsSelected[0] = !postTagsSelected[0];
+                    } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
+                        postTagsSelected[1] = !postTagsSelected[1];
+                    } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
+                        postTagsSelected[2] = !postTagsSelected[2];
+                    } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
+                        postTagsSelected[3] = !postTagsSelected[3];
+                    } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
+                        postTagsSelected[4] = !postTagsSelected[4];
+                    } else if (IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6)) {
+                        postTagsSelected[5] = !postTagsSelected[5];
+                    } else if (IsKeyPressed(KEY_P)) {
+                        lostItems->insert_lost_item(lostItems, postTitle, postContent, postTargetUser, postTagsSelected, false);
+                        save_new_lost_item(lostItems->list[lostItems->len - 1]);
+                        scene = 3;
+                    }
+                }
         }
 
         EndDrawing();
