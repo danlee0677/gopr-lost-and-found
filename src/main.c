@@ -29,6 +29,11 @@ int main() {
     InitWindow(WIDTH, HEIGHT, "LOST AND FOUND");
     SetTargetFPS(60);
 
+    LoginReset(); // 1
+    RegisterReset(); // 2
+    // LobbyReset() ?
+    PostReset(); // 4
+
     load_lost_item_list(lostItems);
 
     while (!WindowShouldClose()) {
@@ -189,8 +194,6 @@ int main() {
                 strcpy(postSchoolNumber, schoolNumber);
                 PostScreen();
 
-                DrawText(TextFormat("schoolNumber: %s", lobbySchoolNumber), 20, HEIGHT - 120, 30, BLACK);
-
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
                         typing = false;
@@ -228,8 +231,14 @@ int main() {
                     } else if (IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6)) {
                         postTagsSelected[5] = !postTagsSelected[5];
                     } else if (IsKeyPressed(KEY_P)) {
-                        lostItems->insert_lost_item(lostItems, postTitle, postContent, postTargetUser, postTagsSelected, false);
-                        save_new_lost_item(lostItems->list[lostItems->len - 1]);
+                        if (PostValid()) {
+                            lostItems->insert_lost_item(lostItems, postTitle, postContent, postTargetUser, postTagsSelected, false);
+                            save_new_lost_item(lostItems->list[lostItems->len - 1]);
+                            PostReset();
+                            scene = 3;
+                        }
+                    } else if (IsKeyPressed(KEY_B)) {
+                        PostReset();
                         scene = 3;
                     }
                 }

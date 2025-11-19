@@ -2,14 +2,7 @@
 #define MODELS_H
 
 #include <stdbool.h>
-
-#define MAX_TITLE_LEN 101
-#define MAX_NAME_LEN 101
-#define MAX_PICT_LEN 101
-#define MAX_CONTENT_LEN 2001
-#define MAX_MESSAGE_LEN 2001
-#define MAX_PASSWORD_LEN 30
-#define MAX_USERNAME_LEN 50
+#include "../include/constants.h"
 
 typedef enum {
     ELECTRONICS, // 전자기기

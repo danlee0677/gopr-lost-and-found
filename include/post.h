@@ -11,5 +11,7 @@ extern bool postTagsSelected[6];
 extern char postTargetUser[MAX_USERNAME_LEN];
 
 void PostScreen();
+void PostReset();
+bool PostValid();
 
 #endif

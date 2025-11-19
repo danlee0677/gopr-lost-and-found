@@ -25,13 +25,13 @@ void load_lost_item_list(LostItemList *list) {
             if (readContent[i] == '_') readContent[i] = ' ';
         }
         readDeleted = (bool)tempReadDeleted;
-        list->insert_lost_item(list, readTitle, readContent, readTargetUser, tags, readDeleted);
-        printf("%s\n", readContent);
+        char readTempUser[1] = "";
+        list->insert_lost_item(list, readTitle, readContent, (strcmp(readTargetUser, "00000") == 0 ? readTempUser : readTargetUser), tags, readDeleted);
     }
 
     for (int i = 0; i < list->len; i++) {
         LostItem *temp = list->list[i];
-        printf("%s\n", temp->content);
+        printf("%s\n", temp->target_user);
     }
 
     fclose(fptr);
@@ -56,7 +56,8 @@ void save_new_lost_item(LostItem *item) {
     char saveTag[7];
     for (int i = 0; i < 6; i++) saveTag[i] = item->tags[i] + '0';
     saveTag[6] = '\0';
-    fprintf(fptr, "%s %s %d %s %s\n", saveTitle, saveContent, (int)item->deleted, item->target_user, saveTag);
+    char saveUserTemp[6] = "00000"; // to prevent missing target user when loading & saving
+    fprintf(fptr, "%s %s %d %s %s\n", saveTitle, saveContent, (int)item->deleted, (strlen(item->target_user) == 0 ? saveUserTemp : item->target_user), saveTag);
 
     fclose(fptr);
 }
