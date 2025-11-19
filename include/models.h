@@ -25,9 +25,7 @@ typedef struct {
 typedef struct LostItemList_t {
     void (*insert_lost_item)(struct LostItemList_t* self, char title[], char content[], char target_user[], bool tags[], bool deleted); // 분실물 삽입
     void (*delete_lost_item)(struct LostItemList_t* self, int _id);   // 분실물 삭제
-    int* (*search_tag)(struct LostItemList_t* self, bool tags[]);     // 태그 검색
-    int* (*search_content)(struct LostItemList_t* self, char **keywords, int keyword_count); // 내용 검색
-    int* (*search_user_id)(struct LostItemList_t *self, char _id[]);     // 유저 ID 검색
+    int* (*search_lost_item)(struct LostItemList_t* self, char keywords[], bool tags[], char _id[]);     // 태그 검색
     LostItem **list;        // 분실물 배열
     int len, max_len;       // 현재 길이, 최대 길이
 } LostItemList;
@@ -36,5 +34,6 @@ extern LostItemList *lostItems;
 
 void load_lost_item_list(LostItemList *list);
 void save_new_lost_item(LostItem *item);
+int lost_item_list_length(int *ind);
 
 #endif

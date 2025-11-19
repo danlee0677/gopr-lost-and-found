@@ -7,7 +7,6 @@
 #include "../include/post.h"
 
 
-char postSchoolNumber[50];
 char postTitle[MAX_TITLE_LEN];
 char postContent[MAX_CONTENT_LEN];
 char postTargetUser[MAX_USERNAME_LEN];
@@ -63,10 +62,12 @@ void PostScreen() {
 }
 
 void PostReset() {
-    memset(postSchoolNumber, '\0', 50);
     memset(postTitle, '\0', MAX_TITLE_LEN);
     memset(postContent, '\0', MAX_CONTENT_LEN);
     memset(postTargetUser, '\0', MAX_USERNAME_LEN);
+    memset(postTagsSelected, false, 6);
+    postError = 0;
+    postSelected = 0;
 }
 
 bool PostValid() {

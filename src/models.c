@@ -64,7 +64,7 @@ void save_new_lost_item(LostItem *item) {
 
 // 분실물 삽입 함수
 // 동적 배열 크기를 초과하면 크기를 2배로 확장
-void lost_item_list_insert_lost_item(LostItemList *self, char title[], char content[], char target_user[], bool tags[], bool deleted = false) {
+void lost_item_list_insert_lost_item(LostItemList *self, char title[], char content[], char target_user[], bool tags[], bool deleted) {
     if (self->len < self->max_len) {
         LostItem *new_item = (LostItem *)malloc(sizeof(LostItem));
         strcpy(new_item->content, content);
@@ -79,7 +79,7 @@ void lost_item_list_insert_lost_item(LostItemList *self, char title[], char cont
     } else {
         self->max_len *= 2; // 배열 크기 확장
         self->list = (LostItem **)realloc(self->list, sizeof(LostItem *) * self->max_len);
-        lost_item_list_insert_lost_item(self, title, content, target_user, tags); // 재귀 호출로 삽입 재시도
+        lost_item_list_insert_lost_item(self, title, content, target_user, tags, deleted); // 재귀 호출로 삽입 재시도
     }
 }
 
@@ -91,54 +91,44 @@ void lost_item_list_delete_lost_item(LostItemList *self, int _id) {
     }
 }
 
-// 태그를 기반으로 검색하여 해당되는 index 배열 반환
+// 태그 및 내용물을 기반으로 검색하여 해당되는 index 배열 반환
 // 반환된 배열은 -1로 종료되며, 사용 후 반드시 free
-int* lost_item_list_search_tag(LostItemList *self, bool tags[]) {
+int* lost_item_list_search(LostItemList *self, char keyword[], bool tags[], char _id[]) {
     int *ret = (int *)malloc(sizeof(int) * (self->len + 1));
     int len = 0;
 
+    bool tags_exist = false, _id_exist = (strlen(_id) == 0 ? false : true), keyword_exist = (strlen(keyword) == 0 ? false : true);
+    for (int i = 0; i < 6; i++) if (tags[i]) tags_exist = true;
+
     for (int i = 0; i < self->len; i++) {
         bool flag = true;
-        for (int j = 0; j < 6; j++) {
-            if (self->list[i]->deleted || (tags[j] && !self->list[i]->tags[j])) {
+        // already deleted
+        if (self->list[i]->deleted) {
+            flag = false; break;
+        }
+        // search for tags
+        if (tags_exist) {
+            for (int j = 0; j < 6; j++) {
+                if (tags[j] && !self->list[i]->tags[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+        }
+        // search for matching tags
+        if (_id_exist) {
+            if (!strcmp(self->list[i]->target_user, _id) != 0) flag = false;
+        }
+        // search for keyword matches
+        if (keyword_exist) {
+            if (strstr(self->list[i]->title, keyword) == NULL && strstr(self->list[i]->content, keyword) == NULL) {
                 flag = false;
-                break;
             }
         }
         if (flag) ret[len++] = i;
     }
+
     ret[len] = -1; // 종료 표시
-    return ret;
-}
-
-// 키워드를 기반으로 제목과 내용에서 검색
-// 대상 유저가 없는 게시물(target_user == -1)만 검색 대상
-int* lost_item_list_search_content(LostItemList *self, char **keywords, int keyword_count) {
-    int *ret = (int *)malloc(sizeof(int) * (self->len + 1));
-    int len = 0;
-
-    for (int i = 0; i < self->len; i++) {
-        if (self->list[i]->deleted || strcmp(self->list[i]->target_user, "") != 0) continue;
-        for (int j = 0; j < keyword_count; j++) {
-            if (strstr(self->list[i]->title, keywords[j]) || strstr(self->list[i]->content, keywords[j])) {
-                ret[len++] = i;
-                break;
-            }
-        }
-    }
-    ret[len] = -1;
-    return ret;
-}
-
-// 유저 ID를 기반으로 본인이 지정된 분실물 검색
-int *lost_item_list_search_user_id(LostItemList *self, char _id[]) {
-    int *ret = (int *)malloc(sizeof(int) * (self->len + 1));
-    int len = 0;
-
-    for (int i = 0; i < self->len; i++) {
-        if (!self->list[i]->deleted && strcmp(self->list[i]->target_user, _id) == 0) ret[len++] = i;
-    }
-    ret[len] = -1;
     return ret;
 }
 
@@ -148,12 +138,16 @@ LostItemList* create_lost_item_list() {
     LostItemList *ret = (LostItemList *)malloc(sizeof(LostItemList));
     ret->delete_lost_item = lost_item_list_delete_lost_item;
     ret->insert_lost_item = lost_item_list_insert_lost_item;
-    ret->search_content = lost_item_list_search_content;
-    ret->search_tag = lost_item_list_search_tag;
-    ret->search_user_id = lost_item_list_search_user_id;
+    ret->search_lost_item = lost_item_list_search;
     ret->len = 0;
     ret->max_len = 1;
     ret->list = (LostItem **)malloc(sizeof(LostItem *));
+    return ret;
+}
+
+int lost_item_list_length(int *ind) {
+    int ret = 0;
+    while (ind[ret] != -1) ret++;
     return ret;
 }
 

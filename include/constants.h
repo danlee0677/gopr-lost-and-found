@@ -11,5 +11,6 @@
 #define MAX_MESSAGE_LEN 2001
 #define MAX_PASSWORD_LEN 30
 #define MAX_USERNAME_LEN 50
+#define MAX_SEARCH_LEN 41
 
 #endif

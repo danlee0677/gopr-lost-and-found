@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "../include/raylib.h"
 #include "../include/constants.h"
 #include "../include/draw.h"
@@ -20,7 +21,7 @@ scene num - description
 5 - 
 */
 
-static int scene = 4;
+static int scene = 3;
 bool typing = false;
 char schoolNumber[50];
 extern LostItemList *lostItems;
@@ -29,10 +30,10 @@ int main() {
     InitWindow(WIDTH, HEIGHT, "LOST AND FOUND");
     SetTargetFPS(60);
 
-    LoginReset(); // 1
-    RegisterReset(); // 2
-    // LobbyReset() ?
-    PostReset(); // 4
+    LoginReset(); // scene=1
+    RegisterReset(); // scene=2
+    LobbyReset(); // scene=3
+    PostReset(); // scene=4
 
     load_lost_item_list(lostItems);
 
@@ -151,10 +152,20 @@ int main() {
                 break;
             case 3: // lobby
                 extern char lobbySchoolNumber[50];
-                extern char lobbySearch[1000];
+                extern char lobbySearch[MAX_SEARCH_LEN];
                 extern int lobbySelected;
                 extern int lobbyPage;
-                extern int lobbyTags;
+                extern bool lobbyTagsSelected[6];
+                extern int *lobbySearchResult;
+                extern char lobbyDummyUser[1];
+                extern bool lobbyTargetUserSelected;
+                extern int lobbySearchResultLength;
+                extern bool lobbySync;
+                
+                if (!lobbySync) {
+                    lobbySync = true;
+                    LobbyLostItemListSync();
+                }
 
                 strcpy(lobbySchoolNumber, schoolNumber);
 
@@ -164,34 +175,55 @@ int main() {
                 DrawText(TextFormat("search: %s", lobbySearch), 20, HEIGHT - 160, 30, BLACK);
                 DrawText(TextFormat("selected: %d", lobbySelected), 20, HEIGHT - 200, 30, BLACK);
                 DrawText(TextFormat("page: %d", lobbyPage), 20, HEIGHT - 240, 30, BLACK);
-                DrawText(TextFormat("tags: %d", lobbyTags), 20, HEIGHT - 280, 30, BLACK);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
                         typing = false;
                         lobbySelected = 0;
-                    } else if (IsKeyPressed(KEY_BACKSPACE)) lobbySearch[strlen(lobbySearch) - 1] = '\0';
-                    else lobbySearch[strlen(lobbySearch)] = GetCharPressed();
+                        free(lobbySearchResult);
+                        LobbyLostItemListSync();
+                    } else if (IsKeyPressed(KEY_BACKSPACE)) {
+                        if (lobbySelected == 1 && strlen(lobbySearch) > 0) lobbySearch[strlen(lobbySearch) - 1] = '\0';
+                    } else {
+                        if (lobbySelected == 1 && strlen(lobbySearch) < MAX_SEARCH_LEN - 1) lobbySearch[strlen(lobbySearch)] = GetCharPressed();
+                    }
+                } else if (lobbySelected == 2) {
+                    if (IsKeyPressed(KEY_ENTER)) {
+                        free(lobbySearchResult);
+                        LobbyLostItemListSync();
+                        lobbySelected = 0;
+                    } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) lobbyTagsSelected[0] = !lobbyTagsSelected[0];
+                    else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) lobbyTagsSelected[1] = !lobbyTagsSelected[1];
+                    else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) lobbyTagsSelected[2] = !lobbyTagsSelected[2];
+                    else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) lobbyTagsSelected[3] = !lobbyTagsSelected[3];
+                    else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) lobbyTagsSelected[4] = !lobbyTagsSelected[4];
+                    else if (IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6)) lobbyTagsSelected[5] = !lobbyTagsSelected[5];
                 } else {
                     if (IsKeyPressed(KEY_S)) {
                         typing = true;
                         lobbySelected = 1;
-                    } else if (IsKeyPressed(KEY_T)) lobbySelected = 2;
-                    else if (IsKeyPressed(KEY_P)) scene = 4;
-                    else if (IsKeyPressed(KEY_D)) scene = 5;
-                    else if (IsKeyPressed(KEY_L)) scene = 0;
+                    } else if (IsKeyPressed(KEY_T)) {
+                        lobbySelected = 2;
+                    } else if (IsKeyPressed(KEY_P)) {
+                        scene = 4;
+                        LobbyReset();
+                    } else if (IsKeyPressed(KEY_D)) {
+                        scene = 5;
+                        LobbyReset();
+                    } else if (IsKeyPressed(KEY_L)) {
+                        scene = 0;
+                        LobbyReset();
+                    }
                 }
 
                 break;
             case 4: // post
-                extern char postSchoolNumber[50];
                 extern int postSelected;
                 extern bool postTagsSelected[6];
                 extern char postTitle[MAX_TITLE_LEN];
                 extern char postContent[MAX_CONTENT_LEN];
                 extern char postTargetUser[MAX_USERNAME_LEN];
 
-                strcpy(postSchoolNumber, schoolNumber);
                 PostScreen();
 
                 if (typing) {
@@ -242,6 +274,10 @@ int main() {
                         scene = 3;
                     }
                 }
+                break;
+            case 5:
+                // todo
+                break;
         }
 
         EndDrawing();
