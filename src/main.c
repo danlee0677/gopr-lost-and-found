@@ -10,6 +10,7 @@
 #include "../include/lobby.h"
 #include "../include/models.h"
 #include "../include/post.h"
+#include "../include/dm.h"
 
 /*
 scene num - description
@@ -27,14 +28,15 @@ bool typing = false;
 char schoolNumber[50];
 extern LostItemList *lostItems;
 
-int main() {
+int main()
+{
     InitWindow(WIDTH, HEIGHT, "LOST AND FOUND");
     SetTargetFPS(60);
 
-    LoginReset(); // scene=1
+    LoginReset();    // scene=1
     RegisterReset(); // scene=2
-    LobbyReset(); // scene=3
-    PostReset(); // scene=4
+    LobbyReset();    // scene=3
+    PostReset();     // scene=4
 
 
     // todo: remove this when finish
@@ -42,144 +44,193 @@ int main() {
 
     load_lost_item_list(lostItems);
 
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose())
+    {
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
         DrawText(TextFormat("scene: %d", scene), 20, HEIGHT - 40, 30, BLACK);
         DrawText(TextFormat("typing: %d", typing), 20, HEIGHT - 80, 30, BLACK);
 
-        switch (scene) {
-            case 0: // main menu
-                MainMenuScreen();
+        switch (scene)
+        {
+        case 0: // main menu
+            MainMenuScreen();
 
-                if (IsKeyPressed(KEY_L)) scene = 1;
-                if (IsKeyPressed(KEY_R)) scene = 2;
+            if (IsKeyPressed(KEY_L))
+                scene = 1;
+            if (IsKeyPressed(KEY_R))
+                scene = 2;
 
-                break;
-            case 1: // login
-                extern int loginSelected;
-                extern bool loginValid;
-                extern char loginUsername[50];
-                extern char loginPassword[50];
+            break;
+        case 1: // login
+            extern int loginSelected;
+            extern bool loginValid;
+            extern char loginUsername[50];
+            extern char loginPassword[50];
 
-                LoginScreen();
+            LoginScreen();
 
-                DrawText(TextFormat("loginSelected: %d", loginSelected), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("loginValid: %d", loginValid), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("loginUsername: %s", loginUsername), 20, HEIGHT - 200, 30, BLACK);
-                DrawText(TextFormat("loginPassword: %s", loginPassword), 20, HEIGHT - 240, 30, BLACK);
-                
-                if (typing) {
-                    if (IsKeyPressed(KEY_ENTER)) {
-                        typing = false;
-                        loginSelected = 0;
-                    } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (loginSelected == 1) loginUsername[strlen(loginUsername) - 1] = '\0';
-                        else if (loginSelected == 2) loginPassword[strlen(loginPassword) - 1] = '\0';
-                    } else {
-                        if (loginSelected == 1) loginUsername[strlen(loginUsername)] = GetCharPressed();
-                        else if (loginSelected == 2) loginPassword[strlen(loginPassword)] = GetCharPressed();
-                    }
-                } else {
-                    if (IsKeyPressed(KEY_U)) {
-                        typing = true;
-                        loginSelected = 1;
-                    } else if (IsKeyPressed(KEY_P)) {
-                        typing = true;
-                        loginSelected = 2;
-                    } else if (IsKeyPressed(KEY_L)) {
-                        if (LoginCheck()) {
-                            loginValid = 0;
-                            strcpy(schoolNumber, loginUsername);
-                            scene = 3;
-                        }
-                        LoginReset();
-                    } else if (IsKeyPressed(KEY_B)) {
-                        LoginReset();
-                        loginValid = 0;
-                        scene = 0;
-                    }
+            DrawText(TextFormat("loginSelected: %d", loginSelected), 20, HEIGHT - 120, 30, BLACK);
+            DrawText(TextFormat("loginValid: %d", loginValid), 20, HEIGHT - 160, 30, BLACK);
+            DrawText(TextFormat("loginUsername: %s", loginUsername), 20, HEIGHT - 200, 30, BLACK);
+            DrawText(TextFormat("loginPassword: %s", loginPassword), 20, HEIGHT - 240, 30, BLACK);
+
+            if (typing)
+            {
+                if (IsKeyPressed(KEY_ENTER))
+                {
+                    typing = false;
+                    loginSelected = 0;
                 }
-
-                break;
-            case 2: // register
-                extern int registerSelected;
-                extern bool registerValid;
-                extern char registerUsername[50];
-                extern char registerPassword[50];
-                extern char registerPassword2[50];
-
-                RegisterScreen();
-
-                DrawText(TextFormat("registerSelected: %d", registerSelected), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("registerValid: %d", registerValid), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("registerUsername: %s", registerUsername), 20, HEIGHT - 200, 30, BLACK);
-                DrawText(TextFormat("registerPassword: %s", registerPassword), 20, HEIGHT - 240, 30, BLACK);
-                DrawText(TextFormat("registerPassword2: %s", registerPassword2), 20, HEIGHT - 280, 30, BLACK);
-
-                if (typing) {
-                    if (IsKeyPressed(KEY_ENTER)) {
-                        typing = false;
-                        registerSelected = 0;
-                    } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (registerSelected == 1) registerUsername[strlen(registerUsername) - 1] = '\0';
-                        else if (registerSelected == 2) registerPassword[strlen(registerPassword) - 1] = '\0';
-                        else if (registerSelected == 3) registerPassword2[strlen(registerPassword2) - 1] = '\0';
-                    } else {
-                        if (registerSelected == 1) registerUsername[strlen(registerUsername)] = GetCharPressed();
-                        else if (registerSelected == 2) registerPassword[strlen(registerPassword)] = GetCharPressed();
-                        else if (registerSelected == 3) registerPassword2[strlen(registerPassword2)] = GetCharPressed();
+                else if (IsKeyPressed(KEY_BACKSPACE))
+                {
+                    if (loginSelected == 1)
+                        loginUsername[strlen(loginUsername) - 1] = '\0';
+                    else if (loginSelected == 2)
+                        loginPassword[strlen(loginPassword) - 1] = '\0';
+                }
+                else
+                {
+                    if (loginSelected == 1)
+                        loginUsername[strlen(loginUsername)] = GetCharPressed();
+                    else if (loginSelected == 2)
+                        loginPassword[strlen(loginPassword)] = GetCharPressed();
+                }
+            }
+            else
+            {
+                if (IsKeyPressed(KEY_U))
+                {
+                    typing = true;
+                    loginSelected = 1;
+                }
+                else if (IsKeyPressed(KEY_P))
+                {
+                    typing = true;
+                    loginSelected = 2;
+                }
+                else if (IsKeyPressed(KEY_L))
+                {
+                    if (LoginCheck())
+                    {
+                        loginValid = 0;
+                        strcpy(schoolNumber, loginUsername);
+                        scene = 3;
                     }
-                } else {
-                    if (IsKeyPressed(KEY_U)) {
-                        typing = true;
-                        registerSelected = 1;
-                    } else if (IsKeyPressed(KEY_P)) {
-                        typing = true;
-                        registerSelected = 2;
-                    } else if (IsKeyPressed(KEY_C)) {
-                        typing = true;
-                        registerSelected = 3;
-                    } else if (IsKeyPressed(KEY_R)) {
-                        if (RegisterCheck()) {
-                            registerValid = 0;
-                            scene = 0;
-                        }
-                        RegisterReset();
-                    } else if (IsKeyPressed(KEY_B)) {
-                        RegisterReset();
+                    LoginReset();
+                }
+                else if (IsKeyPressed(KEY_B))
+                {
+                    LoginReset();
+                    loginValid = 0;
+                    scene = 0;
+                }
+            }
+
+            break;
+        case 2: // register
+            extern int registerSelected;
+            extern bool registerValid;
+            extern char registerUsername[50];
+            extern char registerPassword[50];
+            extern char registerPassword2[50];
+
+            RegisterScreen();
+
+            DrawText(TextFormat("registerSelected: %d", registerSelected), 20, HEIGHT - 120, 30, BLACK);
+            DrawText(TextFormat("registerValid: %d", registerValid), 20, HEIGHT - 160, 30, BLACK);
+            DrawText(TextFormat("registerUsername: %s", registerUsername), 20, HEIGHT - 200, 30, BLACK);
+            DrawText(TextFormat("registerPassword: %s", registerPassword), 20, HEIGHT - 240, 30, BLACK);
+            DrawText(TextFormat("registerPassword2: %s", registerPassword2), 20, HEIGHT - 280, 30, BLACK);
+
+            if (typing)
+            {
+                if (IsKeyPressed(KEY_ENTER))
+                {
+                    typing = false;
+                    registerSelected = 0;
+                }
+                else if (IsKeyPressed(KEY_BACKSPACE))
+                {
+                    if (registerSelected == 1)
+                        registerUsername[strlen(registerUsername) - 1] = '\0';
+                    else if (registerSelected == 2)
+                        registerPassword[strlen(registerPassword) - 1] = '\0';
+                    else if (registerSelected == 3)
+                        registerPassword2[strlen(registerPassword2) - 1] = '\0';
+                }
+                else
+                {
+                    if (registerSelected == 1)
+                        registerUsername[strlen(registerUsername)] = GetCharPressed();
+                    else if (registerSelected == 2)
+                        registerPassword[strlen(registerPassword)] = GetCharPressed();
+                    else if (registerSelected == 3)
+                        registerPassword2[strlen(registerPassword2)] = GetCharPressed();
+                }
+            }
+            else
+            {
+                if (IsKeyPressed(KEY_U))
+                {
+                    typing = true;
+                    registerSelected = 1;
+                }
+                else if (IsKeyPressed(KEY_P))
+                {
+                    typing = true;
+                    registerSelected = 2;
+                }
+                else if (IsKeyPressed(KEY_C))
+                {
+                    typing = true;
+                    registerSelected = 3;
+                }
+                else if (IsKeyPressed(KEY_R))
+                {
+                    if (RegisterCheck())
+                    {
                         registerValid = 0;
                         scene = 0;
                     }
+                    RegisterReset();
                 }
-
-                break;
-            case 3: // lobby
-                extern char lobbySchoolNumber[50];
-                extern char lobbySearch[MAX_SEARCH_LEN];
-                extern int lobbySelected;
-                extern int lobbyPage;
-                extern bool lobbyTagsSelected[6];
-                extern int *lobbySearchResult;
-                extern char lobbyDummyUser[1];
-                extern bool lobbyTargetUserSelected;
-                extern int lobbySearchResultLength;
-                extern bool lobbySync;
-                
-                if (!lobbySync) {
-                    lobbySync = true;
-                    LobbyLostItemListSync();
+                else if (IsKeyPressed(KEY_B))
+                {
+                    RegisterReset();
+                    registerValid = 0;
+                    scene = 0;
                 }
+            }
 
-                strcpy(lobbySchoolNumber, schoolNumber);
+            break;
+        case 3: // lobby
+            extern char lobbySchoolNumber[50];
+            extern char lobbySearch[MAX_SEARCH_LEN];
+            extern int lobbySelected;
+            extern int lobbyPage;
+            extern bool lobbyTagsSelected[6];
+            extern int *lobbySearchResult;
+            extern char lobbyDummyUser[1];
+            extern bool lobbyTargetUserSelected;
+            extern int lobbySearchResultLength;
+            extern bool lobbySync;
 
-                LobbyScreen();
+            if (!lobbySync)
+            {
+                lobbySync = true;
+                LobbyLostItemListSync();
+            }
 
-                DrawText(TextFormat("schoolNumber: %s", lobbySchoolNumber), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("search: %s", lobbySearch), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("selected: %d", lobbySelected), 20, HEIGHT - 200, 30, BLACK);
-                DrawText(TextFormat("page: %d", lobbyPage), 20, HEIGHT - 240, 30, BLACK);
+            strcpy(lobbySchoolNumber, schoolNumber);
+
+            LobbyScreen();
+
+            DrawText(TextFormat("schoolNumber: %s", lobbySchoolNumber), 20, HEIGHT - 120, 30, BLACK);
+            DrawText(TextFormat("search: %s", lobbySearch), 20, HEIGHT - 160, 30, BLACK);
+            DrawText(TextFormat("selected: %d", lobbySelected), 20, HEIGHT - 200, 30, BLACK);
+            DrawText(TextFormat("page: %d", lobbyPage), 20, HEIGHT - 240, 30, BLACK);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {

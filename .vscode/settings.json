@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "constants.h": "c",
+        "models.h": "c",
+        "draw.h": "c",
+        "textbox.h": "c",
+        "raylib.h": "c",
+        "post.h": "c"
+    }
+}
