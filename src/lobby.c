@@ -53,7 +53,7 @@ void LobbyScreen() {
 
     // Search Result Display
     NewRectangle(50, 200, WIDTH / 2 + 200, HEIGHT - 300, TOP_LEFT, BLACK);
-    NewText(TextFormat("<- %d / %d ->", lobbyPage, lostItems->len / 3 + (lostItems->len % 3 ? 1 : 0)), WIDTH / 4 + 125, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
+    NewText(TextFormat("<- %d / %d ->", lobbyPage, lostItems->len / 5 + (lostItems->len % 5 ? 1 : 0)), WIDTH / 4 + 125, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
     
     int result_height = (HEIGHT - 290) / 5;
     for (int i = 0; i < 5; i++) {
