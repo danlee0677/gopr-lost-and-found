@@ -17,8 +17,9 @@ scene num - description
 1 - login
 2 - register
 3 - lobby
-4 - post
-5 - 
+4 - post(post create)
+5 - view(post viewer)
+6 - DM
 */
 
 static int scene = 3;
@@ -212,7 +213,7 @@ int main() {
                         scene = 4;
                         LobbyReset();
                     } else if (IsKeyPressed(KEY_D)) {
-                        scene = 5;
+                        scene = 6;
                         LobbyReset();
                     } else if (IsKeyPressed(KEY_L)) {
                         scene = 0;
@@ -279,8 +280,10 @@ int main() {
                     }
                 }
                 break;
-            case 5:
+            case 5: // view
                 // todo
+                break;
+            case 6: // DM
                 break;
         }
 
