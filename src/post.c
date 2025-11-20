@@ -10,6 +10,7 @@
 char postTitle[MAX_TITLE_LEN];
 char postContent[MAX_CONTENT_LEN];
 char postTargetUser[MAX_USERNAME_LEN];
+char postSchoolNumber[MAX_USERNAME_LEN];
 const char *postErrorMsg[] = {
     "",
     "Invalid Title",
