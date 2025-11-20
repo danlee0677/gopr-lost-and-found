@@ -15,8 +15,9 @@ void load_lost_item_list(LostItemList *list) {
     bool readDeleted;
     char readTargetUser[MAX_USERNAME_LEN];
     char readTags[8];
+    char readWriter[MAX_USERNAME_LEN];
     bool tags[6] = {false, false, false, false, false, false};
-    while (fscanf(fptr, "%s %s %d %s %s", readTitle, readContent, &tempReadDeleted, readTargetUser, readTags) != EOF) {
+    while (fscanf(fptr, "%s %s %d %s %s %s", readTitle, readContent, &tempReadDeleted, readTargetUser, readTags, readWriter) != EOF) {
         for (int i = 0; i < 6; i++) tags[i] = (bool)(readTags[i] - '0');
         for (int i = 0; i < strlen(readTitle); i++) {
             if (readTitle[i] == '_') readTitle[i] = ' ';
@@ -26,7 +27,7 @@ void load_lost_item_list(LostItemList *list) {
         }
         readDeleted = (bool)tempReadDeleted;
         char readTempUser[1] = "";
-        list->insert_lost_item(list, readTitle, readContent, (strcmp(readTargetUser, "00000") == 0 ? readTempUser : readTargetUser), tags, readDeleted);
+        list->insert_lost_item(list, readTitle, readContent, (strcmp(readTargetUser, "00000") == 0 ? readTempUser : readTargetUser), readWriter, tags, readDeleted);
     }
 
     for (int i = 0; i < list->len; i++) {
@@ -57,19 +58,20 @@ void save_new_lost_item(LostItem *item) {
     for (int i = 0; i < 6; i++) saveTag[i] = item->tags[i] + '0';
     saveTag[6] = '\0';
     char saveUserTemp[6] = "00000"; // to prevent missing target user when loading & saving
-    fprintf(fptr, "%s %s %d %s %s\n", saveTitle, saveContent, (int)item->deleted, (strlen(item->target_user) == 0 ? saveUserTemp : item->target_user), saveTag);
+    fprintf(fptr, "%s %s %d %s %s %s\n", saveTitle, saveContent, (int)item->deleted, (strlen(item->target_user) == 0 ? saveUserTemp : item->target_user), saveTag, item->target_user);
 
     fclose(fptr);
 }
 
 // 분실물 삽입 함수
 // 동적 배열 크기를 초과하면 크기를 2배로 확장
-void lost_item_list_insert_lost_item(LostItemList *self, char title[], char content[], char target_user[], bool tags[], bool deleted) {
+void lost_item_list_insert_lost_item(LostItemList *self, char title[], char content[], char target_user[], char writer[], bool tags[], bool deleted) {
     if (self->len < self->max_len) {
         LostItem *new_item = (LostItem *)malloc(sizeof(LostItem));
         strcpy(new_item->content, content);
         strcpy(new_item->title, title);
         strcpy(new_item->target_user, target_user);
+        strcpy(new_item->writer, writer);
         new_item->_id = self->len;
         for (int i = 0; i < 6; i++) {
             new_item->tags[i] = tags[i];
@@ -79,7 +81,7 @@ void lost_item_list_insert_lost_item(LostItemList *self, char title[], char cont
     } else {
         self->max_len *= 2; // 배열 크기 확장
         self->list = (LostItem **)realloc(self->list, sizeof(LostItem *) * self->max_len);
-        lost_item_list_insert_lost_item(self, title, content, target_user, tags, deleted); // 재귀 호출로 삽입 재시도
+        lost_item_list_insert_lost_item(self, title, content, target_user, writer, tags, deleted); // 재귀 호출로 삽입 재시도
     }
 }
 
@@ -104,6 +106,10 @@ int* lost_item_list_search(LostItemList *self, char keyword[], bool tags[], char
         bool flag = true;
         // already deleted
         if (self->list[i]->deleted) {
+            flag = false; break;
+        }
+        // has targeted user, but is not the current user
+        if (strlen(self->list[i]->target_user) != 0 && strcmp(self->list[i]->target_user, _id) != 0) {
             flag = false; break;
         }
         // search for tags

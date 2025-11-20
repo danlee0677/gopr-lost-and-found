@@ -36,6 +36,10 @@ int main() {
     LobbyReset(); // scene=3
     PostReset(); // scene=4
 
+
+    // todo: remove this when finish
+    strcpy(schoolNumber, "24077");
+
     load_lost_item_list(lostItems);
 
     while (!WindowShouldClose()) {
@@ -209,6 +213,16 @@ int main() {
                         if (lobbyPage < (lobbySearchResultLength / 5) + (lobbySearchResultLength % 5 ? 1 : 0)) lobbyPage++;
                     } else if (IsKeyPressed(KEY_LEFT)) {
                         if (lobbyPage > 1) lobbyPage--;
+                    } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
+
+                    } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
+
+                    } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
+
+                    } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
+
+                    } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
+
                     } else if (IsKeyPressed(KEY_P)) {
                         scene = 4;
                         LobbyReset();
@@ -228,8 +242,10 @@ int main() {
                 extern char postTitle[MAX_TITLE_LEN];
                 extern char postContent[MAX_CONTENT_LEN];
                 extern char postTargetUser[MAX_USERNAME_LEN];
+                extern char postSchoolNumber[MAX_USERNAME_LEN];
 
                 PostScreen();
+                strcpy(postSchoolNumber, schoolNumber);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
@@ -269,7 +285,7 @@ int main() {
                         postTagsSelected[5] = !postTagsSelected[5];
                     } else if (IsKeyPressed(KEY_P)) {
                         if (PostValid()) {
-                            lostItems->insert_lost_item(lostItems, postTitle, postContent, postTargetUser, postTagsSelected, false);
+                            lostItems->insert_lost_item(lostItems, postTitle, postContent, postTargetUser, postSchoolNumber, postTagsSelected, false);
                             save_new_lost_item(lostItems->list[lostItems->len - 1]);
                             PostReset();
                             scene = 3;
@@ -281,7 +297,7 @@ int main() {
                 }
                 break;
             case 5: // view
-                // todo
+                extern int view_id;
                 break;
             case 6: // DM
                 break;

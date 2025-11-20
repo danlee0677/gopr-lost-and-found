@@ -19,11 +19,12 @@ typedef struct {
     char content[MAX_CONTENT_LEN]; // 게시글 내용
     bool deleted;                // 삭제 여부
     char target_user[MAX_USERNAME_LEN];             // 분실물 주인(없으면 -1)
+    char writer[MAX_USERNAME_LEN]; // 게시자
     bool tags[6];             // 태그
 } LostItem;
 
 typedef struct LostItemList_t {
-    void (*insert_lost_item)(struct LostItemList_t* self, char title[], char content[], char target_user[], bool tags[], bool deleted); // 분실물 삽입
+    void (*insert_lost_item)(struct LostItemList_t* self, char title[], char content[], char target_user[], char writer[], bool tags[], bool deleted); // 분실물 삽입
     void (*delete_lost_item)(struct LostItemList_t* self, int _id);   // 분실물 삭제
     int* (*search_lost_item)(struct LostItemList_t* self, char keywords[], bool tags[], char _id[]);     // 태그 검색
     LostItem **list;        // 분실물 배열
