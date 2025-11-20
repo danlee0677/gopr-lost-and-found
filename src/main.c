@@ -204,6 +204,10 @@ int main() {
                         lobbySelected = 1;
                     } else if (IsKeyPressed(KEY_T)) {
                         lobbySelected = 2;
+                    } else if (IsKeyPressed(KEY_RIGHT)) {
+                        if (lobbyPage < (lobbySearchResultLength / 5) + (lobbySearchResultLength % 5 ? 1 : 0)) lobbyPage++;
+                    } else if (IsKeyPressed(KEY_LEFT)) {
+                        if (lobbyPage > 1) lobbyPage--;
                     } else if (IsKeyPressed(KEY_P)) {
                         scene = 4;
                         LobbyReset();
