@@ -32,7 +32,6 @@ void load_lost_item_list(LostItemList *list) {
 
     for (int i = 0; i < list->len; i++) {
         LostItem *temp = list->list[i];
-        printf("%s\n", temp->target_user);
     }
 
     fclose(fptr);
@@ -58,7 +57,7 @@ void save_new_lost_item(LostItem *item) {
     for (int i = 0; i < 6; i++) saveTag[i] = item->tags[i] + '0';
     saveTag[6] = '\0';
     char saveUserTemp[6] = "00000"; // to prevent missing target user when loading & saving
-    fprintf(fptr, "%s %s %d %s %s %s\n", saveTitle, saveContent, (int)item->deleted, (strlen(item->target_user) == 0 ? saveUserTemp : item->target_user), saveTag, item->target_user);
+    fprintf(fptr, "%s %s %d %s %s %s\n", saveTitle, saveContent, (int)item->deleted, (strlen(item->target_user) == 0 ? saveUserTemp : item->target_user), saveTag, item->writer);
 
     fclose(fptr);
 }
@@ -88,42 +87,64 @@ void lost_item_list_insert_lost_item(LostItemList *self, char title[], char cont
 // 분실물 삭제 함수
 // ID 범위만 체크하며 삭제 플래그 처리
 void lost_item_list_delete_lost_item(LostItemList *self, int _id) {
+    FILE *fptr = fopen("./data/lostitems.txt", "r+");
+    
+    if (fptr == NULL) return;
+    
+    char temp;
+    int cnt = 0;
+    // seek to the line where the item lives
+    while (cnt < _id && (temp = fgetc(fptr)) != EOF) {
+        if (temp == '\n') cnt++;
+    }
+    // seek until right before the line
+    cnt = 0;
+    while (cnt < 2 && (temp = fgetc(fptr)) != EOF) {
+        if (temp == ' ') cnt++;
+    }
+    fseek(fptr, 0, SEEK_CUR);
+    fprintf(fptr, "1");
+
     if (_id < self->max_len) {
         self->list[_id]->deleted = true;
     }
+    fclose(fptr);
 }
 
 // 태그 및 내용물을 기반으로 검색하여 해당되는 index 배열 반환
 // 반환된 배열은 -1로 종료되며, 사용 후 반드시 free
-int* lost_item_list_search(LostItemList *self, char keyword[], bool tags[], char _id[]) {
+// _id: 현재 로그인된 유저
+int* lost_item_list_search(LostItemList *self, char keyword[], bool tags[], char _id[], bool filters[]) {
     int *ret = (int *)malloc(sizeof(int) * (self->len + 1));
     int len = 0;
 
-    bool tags_exist = false, _id_exist = (strlen(_id) == 0 ? false : true), keyword_exist = (strlen(keyword) == 0 ? false : true);
+    bool tags_exist = false, keyword_exist = (strlen(keyword) == 0 ? false : true);
     for (int i = 0; i < 6; i++) if (tags[i]) tags_exist = true;
-
     for (int i = 0; i < self->len; i++) {
         bool flag = true;
+        // first filter: addressed to me
+        if (filters[0] && strcmp(self->list[i]->target_user, _id) != 0) {
+            flag = false;
+        }
+        // second filter: I am the writer
+        if (filters[1] && strcmp(self->list[i]->writer, _id) != 0) {
+            flag = false;
+        }
         // already deleted
         if (self->list[i]->deleted) {
-            flag = false; break;
+            flag = false;
         }
         // has targeted user, but is not the current user
         if (strlen(self->list[i]->target_user) != 0 && strcmp(self->list[i]->target_user, _id) != 0) {
-            flag = false; break;
+            flag = false;
         }
         // search for tags
         if (tags_exist) {
             for (int j = 0; j < 6; j++) {
                 if (tags[j] && !self->list[i]->tags[j]) {
                     flag = false;
-                    break;
                 }
             }
-        }
-        // search for matching tags
-        if (_id_exist) {
-            if (!strcmp(self->list[i]->target_user, _id) != 0) flag = false;
         }
         // search for keyword matches
         if (keyword_exist) {
@@ -133,7 +154,6 @@ int* lost_item_list_search(LostItemList *self, char keyword[], bool tags[], char
         }
         if (flag) ret[len++] = i;
     }
-
     ret[len] = -1; // 종료 표시
     return ret;
 }

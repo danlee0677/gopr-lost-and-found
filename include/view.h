@@ -3,5 +3,6 @@
 
 void ViewScreen();
 void ViewReset();
+void ViewSynchronize();
 
 #endif

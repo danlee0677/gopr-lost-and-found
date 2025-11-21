@@ -12,6 +12,7 @@
 #include "../include/post.h"
 #include "../include/raylib.h"
 #include "../include/register.h"
+#include "../include/view.h"
 
 /*
 scene num - description
@@ -28,6 +29,7 @@ static int scene = 3;
 bool typing = false;
 char schoolNumber[50];
 extern LostItemList* lostItems;
+extern int viewItemId;
 
 int main() {
     InitWindow(WIDTH, HEIGHT, "LOST AND FOUND");
@@ -37,6 +39,7 @@ int main() {
     RegisterReset();  // scene=2
     LobbyReset();     // scene=3
     PostReset();      // scene=4
+    ViewReset();      // scene=5
 
     // todo: remove this when finish
     strcpy(schoolNumber, "24077");
@@ -177,13 +180,14 @@ int main() {
                 extern bool lobbyTargetUserSelected;
                 extern int lobbySearchResultLength;
                 extern bool lobbySync;
+                extern bool lobbyFilters[2];
+
+                strcpy(lobbySchoolNumber, schoolNumber);
 
                 if (!lobbySync) {
                     lobbySync = true;
                     LobbyLostItemListSync();
                 }
-
-                strcpy(lobbySchoolNumber, schoolNumber);
 
                 LobbyScreen();
 
@@ -230,11 +234,46 @@ int main() {
                         if (lobbyPage < (lobbySearchResultLength / 5) + (lobbySearchResultLength % 5 ? 1 : 0)) lobbyPage++;
                     } else if (IsKeyPressed(KEY_LEFT)) {
                         if (lobbyPage > 1) lobbyPage--;
-                    } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
+                    } 
+                    // navigate upon selecting
+                    else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
+                        if ((lobbyPage - 1) * 5 < lobbySearchResultLength) {
+                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5];
+                            scene = 5;
+                            LobbyReset();
+                        }
                     } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
+                        if ((lobbyPage - 1) * 5 + 1 < lobbySearchResultLength) {
+                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5 + 1];
+                            scene = 5;
+                            LobbyReset();
+                        }
                     } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
+                        if ((lobbyPage - 1) * 5 + 2 < lobbySearchResultLength) {
+                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5 + 2];
+                            scene = 5;
+                            LobbyReset();
+                        }
                     } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
+                        if ((lobbyPage - 1) * 5 + 3 < lobbySearchResultLength) {
+                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5 + 3];
+                            scene = 5;
+                            LobbyReset();
+                        }
                     } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
+                        if ((lobbyPage - 1) * 5 + 4 < lobbySearchResultLength) {
+                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5 + 4];
+                            scene = 5;
+                            LobbyReset();
+                        }
+                    } else if (IsKeyPressed(KEY_A)) {
+                        lobbyFilters[0] = !lobbyFilters[0];
+                        LobbyLostItemListSync();
+                    } else if (IsKeyPressed(KEY_W)) {
+                        lobbyFilters[1] = !lobbyFilters[1];
+                        LobbyLostItemListSync();
+                    } else if (IsKeyPressed(KEY_C)) {
+                        LobbyReset();
                     } else if (IsKeyPressed(KEY_P)) {
                         scene = 4;
                         LobbyReset();
@@ -315,7 +354,34 @@ int main() {
                 }
                 break;
             case 5:  // view
-                extern int view_id;
+                extern LostItem *viewItem;
+                extern char viewSchoolNumber[MAX_USERNAME_LEN];
+                extern bool viewSync;
+                viewItem = lostItems->list[viewItemId];
+
+
+                strcpy(viewSchoolNumber, schoolNumber);
+
+                if (!viewSync) {
+                    ViewSynchronize();
+                    viewSync = true;
+                }
+
+                ViewScreen();
+
+                if (IsKeyPressed(KEY_B)) {
+                    // go back
+                    scene = 3;
+                    ViewReset();
+                } else if (IsKeyPressed(KEY_D) && strcmp(viewItem->writer, schoolNumber) != 0) {
+                    // todo: directly to DM
+                    ViewReset();
+                } else if (IsKeyPressed(KEY_M) && strcmp(viewItem->writer, schoolNumber) == 0) {
+                    // mark as deleted
+                    lostItems->delete_lost_item(lostItems, viewItemId);
+                    ViewReset();
+                    scene = 3;
+                }
                 break;
             case 6:  // DM
                 extern int DMselected;
