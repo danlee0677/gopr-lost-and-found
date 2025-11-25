@@ -6,7 +6,11 @@
         "textbox.h": "c",
         "raylib.h": "c",
         "post.h": "c",
+<<<<<<< Updated upstream
         "dm.h": "c",
         "lobby.h": "c"
+=======
+        "notif.h": "c"
+>>>>>>> Stashed changes
     }
 }

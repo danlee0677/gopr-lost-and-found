@@ -13,7 +13,11 @@
 #include "../include/raylib.h"
 #include "../include/register.h"
 #include "../include/view.h"
+<<<<<<< Updated upstream
 #include "../include/dmview.h"
+=======
+#include "../include/notif.h"
+>>>>>>> Stashed changes
 
 /*
 scene num - description
@@ -238,7 +242,7 @@ int main() {
                         if (lobbyPage < (lobbySearchResultLength / 5) + (lobbySearchResultLength % 5 ? 1 : 0)) lobbyPage++;
                     } else if (IsKeyPressed(KEY_LEFT)) {
                         if (lobbyPage > 1) lobbyPage--;
-                    } 
+                    }
                     // navigate upon selecting
                     else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
                         if ((lobbyPage - 1) * 5 < lobbySearchResultLength) {
@@ -286,6 +290,9 @@ int main() {
                         LobbyReset();
                     } else if (IsKeyPressed(KEY_L)) {
                         scene = 0;
+                        LobbyReset();
+                    } else if(IsKeyPressed(KEY_Q)) {
+                        scene = 7;
                         LobbyReset();
                     }
                 }
@@ -409,6 +416,7 @@ int main() {
                     }
                 }
                 break;
+<<<<<<< Updated upstream
 
             case 7: //DM view
                 DMviewScreen();
@@ -420,6 +428,48 @@ int main() {
                         scene = 3;
                     }
                 }
+=======
+            case 7:  // notifications
+                extern char notif_lines[5][256];
+                extern int notif_count;
+                extern int notif_total_page;
+                extern int current_page;
+                int dmitemid;
+
+                DrawText(TextFormat("notif_count: %d",  notif_count), 20, HEIGHT - 120, 30, BLACK);
+                DrawText(TextFormat("notif_total_page: %d", notif_total_page), 20, HEIGHT - 160, 30, BLACK);
+                DrawText(TextFormat("current_page: %d", current_page), 20, HEIGHT - 200, 30, BLACK);
+
+                NotifScreen();
+                if (IsKeyPressed(KEY_B)) {
+                    scene = 3;
+                } else if (IsKeyPressed(KEY_RIGHT)) {
+                    if (current_page < notif_total_page? 1 : 0) current_page++;
+                } else if (IsKeyPressed(KEY_LEFT)) {
+                    if (current_page > 1) current_page--;
+                } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
+                    if ((current_page - 1) * 5 < notif_count) {
+
+                    }
+                }  else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
+                    if ((current_page - 1) * 5 < notif_count) {
+
+                    }
+                }  else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
+                    if ((current_page - 1) * 5 < notif_count) {
+                        
+                    }
+                }  else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
+                    if ((current_page - 1) * 5 < notif_count) {
+                        
+                    }
+                }  else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
+                    if ((current_page - 1) * 5 < notif_count) {
+                        
+                    }
+                } 
+
+>>>>>>> Stashed changes
                 break;
         }
 
