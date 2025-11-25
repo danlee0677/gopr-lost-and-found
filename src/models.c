@@ -260,6 +260,27 @@ void load_dm_list(DMList *list) {
     UnloadDirectoryFiles(files);
 }
 
+// DM 저장
+void save_new_dm(DMMessage *item) {
+    char path[256];
+    snprintf(path, sizeof(path), "./data/dm/%s %s %d.txt", item->sender, item->receiver, item->id);
+    printf("%s %s", item->sender, item->receiver);
+
+    FILE *fptr = fopen(path, "w");
+    if (fptr == NULL) {
+        printf("Failed to save new DM: %s\n", path);
+        return;
+    }
+
+    // 1줄: title
+    fprintf(fptr, "%s\n", item->title);
+
+    // 2줄부터: content (여러 줄 포함 가능)
+    fprintf(fptr, "%s", item->content);
+
+    fclose(fptr);
+}
+
 // 채팅 리스트에 채팅 추가
 void dm_list_insert_message(DMList *self, char title[], char content[], char sender[], char receiver[]) {
     if (self->len < self->max_len) {
@@ -268,7 +289,7 @@ void dm_list_insert_message(DMList *self, char title[], char content[], char sen
         strcpy(new_item->title, title);
         strcpy(new_item->sender, sender);
         strcpy(new_item->receiver, receiver);
-        new_item->id = self->len;
+        new_item->id = self->len + 1;
         self->list[self->len++] = new_item;
     } else {
         self->max_len *= 2; // 배열 크기 확장

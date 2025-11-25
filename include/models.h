@@ -57,6 +57,7 @@ void save_new_lost_item(LostItem *item);
 int lost_item_list_length(int *ind);
 
 void load_dm_list(DMList *dmList);
+void save_new_dm(DMMessage *item);
 int dm_list_length(int *ind);
 
 #endif

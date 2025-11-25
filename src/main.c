@@ -14,6 +14,7 @@
 #include "../include/register.h"
 #include "../include/view.h"
 #include "../include/dmview.h"
+#include "../include/dmsend.h"
 
 /*
 scene num - description
@@ -32,6 +33,7 @@ char schoolNumber[50];
 extern LostItemList* lostItems;
 extern DMList* dmMessages;
 extern int viewItemId;
+extern char DMsendReceiver[MAX_USERNAME_LEN];
 extern int viewDMId;
 
 int main() {
@@ -380,7 +382,8 @@ int main() {
                     ViewReset();
                 } else if (IsKeyPressed(KEY_D) && strcmp(viewItem->writer, schoolNumber) != 0) {
                     // todo: directly to DM
-                    ViewReset();
+                    strcpy(DMsendReceiver, viewItem->writer);
+                    scene = 8;
                 } else if (IsKeyPressed(KEY_M) && strcmp(viewItem->writer, schoolNumber) == 0) {
                     // mark as deleted
                     lostItems->delete_lost_item(lostItems, viewItemId);
@@ -483,6 +486,54 @@ int main() {
                     if (IsKeyPressed(KEY_B)) {
                         DMviewReset();
                         scene = 6;
+                    }
+                }
+                break;
+            
+            case 8: //DM send
+                extern int DMsendSelected;
+                extern char DMsendTitle[MAX_TITLE_LEN];
+                extern char DMsendContent[MAX_CONTENT_LEN];
+                extern char DMsendReceiver[MAX_USERNAME_LEN];
+                extern char DMsendSchoolNumber[MAX_USERNAME_LEN];
+
+                strcpy(DMsendSchoolNumber, schoolNumber);
+                
+                DMsendScreen();
+
+                if (typing) {
+                    if (IsKeyPressed(KEY_ENTER)) {
+                        typing = false;
+                        DMsendSelected = 0;
+                    } else if (IsKeyPressed(KEY_BACKSPACE)) {
+                        if (DMsendSelected == 1 && strlen(DMsendTitle) > 0)
+                            DMsendTitle[strlen(DMsendTitle) - 1] = '\0';
+                        else if (DMsendSelected == 2 && strlen(DMsendContent) > 0)
+                            DMsendContent[strlen(DMsendContent) - 1] = '\0';
+                    } else {
+                        // todo: word count limit
+                        if (DMsendSelected == 1 && strlen(DMsendTitle) < MAX_TITLE_LEN - 1)
+                            DMsendTitle[strlen(DMsendTitle)] = GetCharPressed();
+                        else if (DMsendSelected == 2 && strlen(DMsendContent) < MAX_CONTENT_LEN - 1)
+                            DMsendContent[strlen(DMsendContent)] = GetCharPressed();
+                    }
+                } else {
+                    if (IsKeyPressed(KEY_B)) {
+                        DMviewReset();
+                        scene = 5;
+                    } else if (IsKeyPressed(KEY_T)) {
+                        typing = true;
+                        DMsendSelected = 1;
+                    } else if (IsKeyPressed(KEY_C)) {
+                        typing = true;
+                        DMsendSelected = 2;
+                    } else if (IsKeyPressed(KEY_P)) {
+                        if (DMsendValid()) {
+                            dmMessages->insert_message(dmMessages, DMsendTitle, DMsendContent, DMsendSchoolNumber, DMsendReceiver);
+                            save_new_dm(dmMessages->list[dmMessages->len - 1]);
+                            DMsendReset();
+                            scene = 5;
+                        }
                     }
                 }
                 break;
