@@ -13,11 +13,8 @@
 #include "../include/raylib.h"
 #include "../include/register.h"
 #include "../include/view.h"
-<<<<<<< Updated upstream
 #include "../include/dmview.h"
-=======
 #include "../include/notif.h"
->>>>>>> Stashed changes
 
 /*
 scene num - description
@@ -416,7 +413,6 @@ int main() {
                     }
                 }
                 break;
-<<<<<<< Updated upstream
 
             case 7: //DM view
                 DMviewScreen();
@@ -428,8 +424,7 @@ int main() {
                         scene = 3;
                     }
                 }
-=======
-            case 7:  // notifications
+            case 8:  // notifications
                 extern char notif_lines[5][256];
                 extern int notif_count;
                 extern int notif_total_page;
@@ -469,7 +464,6 @@ int main() {
                     }
                 } 
 
->>>>>>> Stashed changes
                 break;
         }
 

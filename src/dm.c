@@ -26,7 +26,6 @@ extern DMList *dmMessages;
 void DMscreen() {
     NewRectangle(50, 55, WIDTH - 100, 100, TOP_LEFT, BLACK);
     NewText("DM", WIDTH / 2, 110, 70, MIDDLE_CENTER, BLACK);
-<<<<<<< Updated upstream
 
     NewRectangle(50, 200, WIDTH / 2 + 200, HEIGHT - 300, TOP_LEFT, BLACK);
     NewText("<-         ->", WIDTH / 4 + 125, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
@@ -41,9 +40,7 @@ void DMscreen() {
             NewText(TextFormat("(%d) %s", i + 1, lostItems->list[dmSearchResult[ind]]->title), 70, 195 + result_height * i + result_height / 2, 40, MIDDLE_LEFT, BLACK);
         }
     }
-=======
     
->>>>>>> Stashed changes
 }
 
 void DMreset() {
