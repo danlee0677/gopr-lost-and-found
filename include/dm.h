@@ -3,5 +3,7 @@
 
 void DMscreen();
 void DMreset();
+void OpenDM();
+void DMListSync();
 
 #endif

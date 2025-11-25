@@ -13,6 +13,7 @@
 #include "../include/raylib.h"
 #include "../include/register.h"
 #include "../include/view.h"
+#include "../include/dmview.h"
 
 /*
 scene num - description
@@ -29,6 +30,7 @@ static int scene = 3;
 bool typing = false;
 char schoolNumber[50];
 extern LostItemList* lostItems;
+extern DMList* dmMessages;
 extern int viewItemId;
 
 int main() {
@@ -42,9 +44,10 @@ int main() {
     ViewReset();      // scene=5
 
     // todo: remove this when finish
-    strcpy(schoolNumber, "24077");
+    strcpy(schoolNumber, "24101");
 
     load_lost_item_list(lostItems);
+    load_dm_list(dmMessages);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -187,6 +190,7 @@ int main() {
                 if (!lobbySync) {
                     lobbySync = true;
                     LobbyLostItemListSync();
+                    printf("%d\n", lobbySearchResultLength);
                 }
 
                 LobbyScreen();
@@ -385,12 +389,34 @@ int main() {
                 break;
             case 6:  // DM
                 extern int DMselected;
+                extern bool DMsync;
+                extern char DMschoolNumber[50];
+
+                strcpy(DMschoolNumber, schoolNumber);
+
+                if (!DMsync) {
+                    DMListSync();
+                    DMsync = true;
+                }
+
                 DMscreen();
 
                 if (typing) {
                 } else {
                     if (IsKeyPressed(KEY_B)) {
                         DMreset();
+                        scene = 3;
+                    }
+                }
+                break;
+
+            case 7: //DM view
+                DMviewScreen();
+
+                if (typing) {
+                } else {
+                    if (IsKeyPressed(KEY_B)) {
+                        DMviewReset();
                         scene = 3;
                     }
                 }

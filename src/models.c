@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/models.h"
+#include "../include/raylib.h"
 
 void load_lost_item_list(LostItemList *list) {
     FILE *fptr = fopen("./data/lostitems.txt", "r");
@@ -178,3 +179,140 @@ int lost_item_list_length(int *ind) {
 }
 
 LostItemList *lostItems = create_lost_item_list();
+
+/*---------------------채팅---------------------*/
+//채팅 리스트에 메세지 추가
+void load_dm_list(DMList *list) {
+    list->len = 0;
+
+        list->list = (DMMessage **)malloc(sizeof(DMMessage *) * list->max_len);
+    if (list->list == NULL) {
+        fprintf(stderr, "load_dm_list: malloc failed\n");
+        list->max_len = 0;
+        return;
+    }
+
+    // data/dm 폴더의 파일들 로드
+    FilePathList files = LoadDirectoryFiles("data/dm");
+    printf("CWD = %s\n", GetWorkingDirectory());
+    printf("DM file count = %d\n", files.count);
+
+    for (int i = 0; i < files.count; i++) {
+        const char *fullPath = files.paths[i];
+        const char *filename = GetFileName(fullPath);
+
+        // 파일 이름에서 sender / receiver / id 파싱
+        char sender[50];
+        char receiver[50];
+        int fileId; // 필요하면 나중에 DMMessage->id에 쓸 수도 있음
+
+        // "sender receiver id.txt" 형식이라고 가정
+        // .txt 포함된 상태로 sscanf 해도 동작함 (뒤에 .txt는 무시됨)
+        if (sscanf(filename, "%49s %49s %d", sender, receiver, &fileId) != 3) {
+            printf("skip invalid filename: %s\n", filename);
+            continue;
+        }
+
+        // 파일 열기
+        FILE *fp = fopen(fullPath, "r");
+        if (!fp) {
+            fprintf(stderr, "failed to open %s\n", fullPath);
+            continue;
+        }
+
+        char title[MAX_TITLE_LEN];
+        char content[MAX_MESSAGE_LEN];
+        char line[512];
+
+        // 첫 줄: title
+        if (!fgets(title, sizeof(title), fp)) {
+            fclose(fp);
+            continue;
+        }
+        // 개행 제거
+        title[strcspn(title, "\r\n")] = '\0';
+
+        // 나머지 줄들: content
+        content[0] = '\0';
+        while (fgets(line, sizeof(line), fp)) {
+            size_t curLen = strlen(content);
+            size_t lineLen = strlen(line);
+
+            if (curLen + lineLen + 1 >= sizeof(content)) {
+                // 더 이상 넣을 공간 없으면 잘라서 넣고 종료
+                size_t avail = sizeof(content) - curLen - 1;
+                if (avail > 0) {
+                    strncat(content, line, avail);
+                }
+                content[sizeof(content) - 1] = '\0';
+                break;
+            } else {
+                strcat(content, line);
+            }
+        }
+
+        fclose(fp);
+
+        // DMList에 추가
+        list->insert_message(list, title, content, sender, receiver);
+    }
+
+    UnloadDirectoryFiles(files);
+}
+
+// 채팅 리스트에 채팅 추가
+void dm_list_insert_message(DMList *self, char title[], char content[], char sender[], char receiver[]) {
+    if (self->len < self->max_len) {
+        DMMessage *new_item = (DMMessage *)malloc(sizeof(DMMessage));
+        strcpy(new_item->content, content);
+        strcpy(new_item->title, title);
+        strcpy(new_item->sender, sender);
+        strcpy(new_item->receiver, receiver);
+        new_item->id = self->len;
+        self->list[self->len++] = new_item;
+    } else {
+        self->max_len *= 2; // 배열 크기 확장
+        self->list = (DMMessage **)realloc(self->list, sizeof(DMMessage *) * self->max_len);
+        dm_list_insert_message(self, title, content, sender, receiver); // 재귀 호출로 삽입 재시도
+    }
+}
+
+//채팅 리스트에서 작성자 검색, 조건 만족하는 인덱스 리스트 반환
+int* dm_list_search(DMList *self, char _id[], int type) {
+    int *ret = (int *)malloc(sizeof(int) * (self->len + 1));
+    int len = 0;
+
+    for (int i = 0; i < self->len; i++) {
+        bool flag = false;
+        // first filter: addressed to me
+        if (type == 1 && strcmp(self->list[i]->sender, _id) == 0) {
+            flag = true;
+        }
+        else if (type == 2 && strcmp(self->list[i]->receiver, _id) == 0) {
+            flag = true;
+        }
+        if (flag) ret[len++] = i;
+    }
+    ret[len] = -1; // 종료 표시
+    return ret;
+}
+
+// 채팅 리스트 생성 함수
+DMList* create_dm_list() {
+    DMList* ret = (DMList *)malloc(sizeof(DMList));
+    ret->insert_message = dm_list_insert_message;
+    ret->search_message = dm_list_search;   
+
+    ret->max_len = 1;
+    ret->list = (DMMessage **)malloc(sizeof (DMMessage *));
+    ret->len = 0;
+    return ret;
+}
+
+int dm_list_length(int *ind) {
+    int ret = 0;
+    while (ind[ret] != -1) ret++;
+    return ret;
+}
+
+DMList *dmMessages = create_dm_list();

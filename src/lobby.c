@@ -14,7 +14,7 @@ int lobbySelected = 0;
 int lobbyPage = 1;
 bool lobbyTagsSelected[6] = {false, false, false, false, false, false};
 extern LostItemList* lostItems;
-int *lobbySearchResult;
+int *lobbySearchResult = NULL;
 int lobbySearchResultLength = 0;
 char lobbyDummyUser[1] = "";
 bool lobbyTargetUserSelected = false;
@@ -64,7 +64,7 @@ void LobbyScreen() {
     // Search Result Display
     NewRectangle(50, 200, WIDTH / 2 + 200, HEIGHT - 300, TOP_LEFT, BLACK);
     NewText("<-         ->", WIDTH / 4 + 125, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
-    int denominator = lostItems->len / 5 + (lostItems->len % 5 ? 1 : 0);
+    int denominator = lobbySearchResultLength / 5 + (lobbySearchResultLength % 5 ? 1 : 0);
     NewText(TextFormat("%d / %d", lobbyPage, (denominator ? denominator : 1)), WIDTH / 4 + 125, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
     
     int result_height = (HEIGHT - 290) / 5;
@@ -106,7 +106,10 @@ void LobbyScreen() {
 }
 
 void LobbyReset() {
-    free(lobbySearchResult);
+    if (lobbySearchResult) {
+        free(lobbySearchResult);
+        lobbySearchResult = NULL;
+    }
     lobbySync = false;
     memset(lobbySchoolNumber, '\0', 50);
     memset(lobbySearch, '\0', MAX_SEARCH_LEN);

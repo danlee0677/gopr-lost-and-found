@@ -31,10 +31,32 @@ typedef struct LostItemList_t {
     int len, max_len;       // 현재 길이, 최대 길이
 } LostItemList;
 
+// 채팅 메시지 구조체: 메시지 내용 + 발신자 ID
+typedef struct {
+    char title[MAX_TITLE_LEN];
+    char content[MAX_MESSAGE_LEN]; // 메시지 본문
+    char sender[50];             // 발신자 ID
+    char receiver[50];
+    int id;
+} DMMessage;
+
+// 채팅 메세지 리스트 구조체
+typedef struct DMList_t {
+    void (*insert_message)(struct DMList_t* self, char title[], char content[], char sender[], char receiver[]);
+    int* (*search_message)(struct DMList_t* self, char _id[], int type);     // 검색
+
+    DMMessage **list;
+    int len, max_len;
+} DMList;
+
 extern LostItemList *lostItems;
+extern DMList *dmList; 
 
 void load_lost_item_list(LostItemList *list);
 void save_new_lost_item(LostItem *item);
 int lost_item_list_length(int *ind);
+
+void load_dm_list(DMList *dmList);
+int dm_list_length(int *ind);
 
 #endif

@@ -5,6 +5,8 @@
         "draw.h": "c",
         "textbox.h": "c",
         "raylib.h": "c",
-        "post.h": "c"
+        "post.h": "c",
+        "dm.h": "c",
+        "lobby.h": "c"
     }
 }
