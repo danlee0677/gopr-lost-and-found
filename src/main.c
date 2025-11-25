@@ -32,6 +32,7 @@ char schoolNumber[50];
 extern LostItemList* lostItems;
 extern DMList* dmMessages;
 extern int viewItemId;
+extern int viewDMId;
 
 int main() {
     InitWindow(WIDTH, HEIGHT, "LOST AND FOUND");
@@ -391,6 +392,10 @@ int main() {
                 extern int DMselected;
                 extern bool DMsync;
                 extern char DMschoolNumber[50];
+                extern int DMtypes;
+                extern int dmSearchResultLength;
+                extern int* dmSearchResult;
+                extern int DMpage;
 
                 strcpy(DMschoolNumber, schoolNumber);
 
@@ -403,21 +408,81 @@ int main() {
 
                 if (typing) {
                 } else {
-                    if (IsKeyPressed(KEY_B)) {
+                    
+                    if (IsKeyPressed(KEY_S)) {
+                        DMtypes = 1;
+                        DMListSync();
+                    }
+                    else if (IsKeyPressed(KEY_I)) {
+                        DMtypes = 2;
+                        DMListSync();
+                    }
+                    else if (IsKeyPressed(KEY_B)) {
                         DMreset();
                         scene = 3;
                     }
+
+                    else if (IsKeyPressed(KEY_RIGHT)) {
+                        if (DMpage < (dmSearchResultLength / 7) + (dmSearchResultLength % 7 ? 1 : 0)) DMpage++;
+                    } else if (IsKeyPressed(KEY_LEFT)) {
+                        if (DMpage > 1) DMpage--;
+                    } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
+                        if ((DMpage - 1) * 5 < dmSearchResultLength) {
+                            viewDMId = dmSearchResult[(DMpage - 1) * 7];
+                            scene = 7;
+                            DMreset();
+                        }
+                    } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
+                        if ((DMpage - 1) * 7 + 1 < dmSearchResultLength) {
+                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 1];
+                            scene = 7;
+                            DMreset();
+                        }
+                    } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
+                        if ((DMpage - 1) * 7 + 2 < dmSearchResultLength) {
+                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 2];
+                            scene = 7;
+                            DMreset();
+                        }
+                    } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
+                        if ((DMpage - 1) * 7 + 3 < dmSearchResultLength) {
+                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 3];
+                            scene = 7;
+                            DMreset();
+                        }
+                    } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
+                        if ((DMpage - 1) * 7 + 4 < dmSearchResultLength) {
+                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 4];
+                            scene = 7;
+                            DMreset();
+                        }
+                    } else if (IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6)) {
+                        if ((DMpage - 1) * 7 + 5 < dmSearchResultLength) {
+                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 5];
+                            scene = 7;
+                            DMreset();
+                        }
+                    } else if (IsKeyPressed(KEY_SEVEN) || IsKeyPressed(KEY_KP_7)) {
+                        if ((DMpage - 1) * 7 + 6 < dmSearchResultLength) {
+                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 6];
+                            scene = 7;
+                            DMreset();
+                        }
+                    } 
                 }
                 break;
 
             case 7: //DM view
+                extern DMMessage* viewDM;
+                viewDM = dmMessages->list[viewDMId];
+
                 DMviewScreen();
 
                 if (typing) {
                 } else {
                     if (IsKeyPressed(KEY_B)) {
                         DMviewReset();
-                        scene = 3;
+                        scene = 6;
                     }
                 }
                 break;

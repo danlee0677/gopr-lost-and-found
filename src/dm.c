@@ -27,19 +27,32 @@ void DMscreen() {
     NewRectangle(50, 55, WIDTH - 100, 100, TOP_LEFT, BLACK);
     NewText("DM", WIDTH / 2, 110, 70, MIDDLE_CENTER, BLACK);
 
-    NewRectangle(50, 200, WIDTH / 2 + 200, HEIGHT - 300, TOP_LEFT, BLACK);
-    NewText("<-         ->", WIDTH / 4 + 125, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
+    NewRectangle(50, 200, WIDTH / 2 + 570, HEIGHT - 300, TOP_LEFT, BLACK); // 큰상자
+    NewText("<-         ->", WIDTH / 4 + 300, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
     int denominator = dmSearchResultLength / 7 + (dmSearchResultLength % 7 ? 1 : 0);
-    NewText(TextFormat("%d / %d", DMpage, (denominator ? denominator : 1)), WIDTH / 4 + 125, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
+    NewText(TextFormat("%d / %d", DMpage, (denominator ? denominator : 1)), WIDTH / 4 + 300, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
 
     int result_height = (HEIGHT - 290) / 7;
     for (int i = 0; i < 7; i++) {
         int ind = (DMpage - 1) * 7 + i;
         if (ind < dmSearchResultLength) {
-            NewRectangle(50, 195 + result_height * i + result_height / 2, WIDTH / 2 + 200, result_height - 10, MIDDLE_LEFT, BLACK);
-            NewText(TextFormat("(%d) %s", i + 1, lostItems->list[dmSearchResult[ind]]->title), 70, 195 + result_height * i + result_height / 2, 40, MIDDLE_LEFT, BLACK);
+            NewRectangle(50, 195 + result_height * i + result_height / 2, WIDTH / 2 + 570, result_height - 10, MIDDLE_LEFT, BLACK);
+            NewText(TextFormat("(%d) %s", i + 1, dmMessages->list[dmSearchResult[ind]]->title), 70, 195 + result_height * i + result_height / 2, 40, MIDDLE_LEFT, BLACK);
         }
     }
+    
+    // 보낸 편지함
+
+    NewRectangle(WIDTH - 50, 200, 250, 120, TOP_RIGHT, (DMtypes == 1 ? RED : BLACK));
+    NewText("Sent (S)", WIDTH - 175, 260, 50, MIDDLE_CENTER, BLACK);
+
+    // 받은 편지함
+    NewRectangle(WIDTH - 50, 360, 250, 120, TOP_RIGHT, (DMtypes == 2 ? RED : BLACK));
+    NewText("Inbox (I)", WIDTH - 175, 420, 50, MIDDLE_CENTER, BLACK);
+
+    // 뒤로가기
+    NewRectangle(WIDTH - 50, 520, 250, 120, TOP_RIGHT, BLACK);
+    NewText("Back (B)", WIDTH - 175, 580, 50, MIDDLE_CENTER, BLACK);
 }
 
 void DMreset() {
