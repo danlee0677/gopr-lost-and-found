@@ -59,7 +59,7 @@ void LobbyScreen() {
     NewRectangle(WIDTH / 2 + 300, HEIGHT - 210, 320, 110, TOP_LEFT, BLACK);
 
     // top right 
-    NewText(TextFormat("Hello, %s!", lobbySchoolNumber), WIDTH - 50, 75, 50, TOP_RIGHT, BLACK);
+    NewText(TextFormat("Hello, %s!", lobbySchoolNumber), WIDTH - 50, 35, 50, TOP_RIGHT, BLACK);
 
     // Search Result Display
     NewRectangle(50, 200, WIDTH / 2 + 200, HEIGHT - 300, TOP_LEFT, BLACK);
@@ -76,6 +76,10 @@ void LobbyScreen() {
             NewText(TextFormat("%.50s...", lostItems->list[lobbySearchResult[ind]]->content), 70, 195 + result_height * i + result_height * 0.7, 30, MIDDLE_LEFT, BLACK);
         }
     }
+
+    // Notification
+    NewRectangle(WIDTH - 50, 100, 320, 50, TOP_RIGHT, BLACK);
+    NewText("Notifications (N)", WIDTH - 215, 125, 37, MIDDLE_CENTER, BLACK);
 
     // Post    
     NewRectangle(WIDTH - 50, 200, 250, 120, TOP_RIGHT, BLACK);
