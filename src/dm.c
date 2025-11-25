@@ -41,6 +41,7 @@ void DMscreen() {
         }
     }
     
+        
     // 보낸 편지함
 
     NewRectangle(WIDTH - 50, 200, 250, 120, TOP_RIGHT, (DMtypes == 1 ? RED : BLACK));
