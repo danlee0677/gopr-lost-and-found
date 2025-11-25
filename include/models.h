@@ -44,6 +44,7 @@ typedef struct {
 typedef struct DMList_t {
     void (*insert_message)(struct DMList_t* self, char title[], char content[], char sender[], char receiver[]);
     int* (*search_message)(struct DMList_t* self, char _id[], int type);     // 검색
+    int (*search_dm_by_elements)(struct DMList_t* self, char sender[], char receiver[], int id); 
 
     DMMessage **list;
     int len, max_len;

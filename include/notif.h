@@ -4,5 +4,6 @@
 void NotifScreen();
 void readNotifFile();
 void clearNotif();
+void notifReset();
 
 #endif
