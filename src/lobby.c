@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "../include/raylib.h"
 #include "../include/constants.h"
+#include "../include/textbox.h"
 #include "../include/models.h"
 #include "../include/draw.h"
 #include "../include/lobby.h"
@@ -71,7 +72,8 @@ void LobbyScreen() {
         int ind = (lobbyPage - 1) * 5 + i;
         if (ind < lobbySearchResultLength) {
             NewRectangle(50, 195 + result_height * i + result_height / 2, WIDTH / 2 + 200, result_height - 10, MIDDLE_LEFT, BLACK);
-            NewText(TextFormat("(%d) %s", i + 1, lostItems->list[lobbySearchResult[ind]]->title), 70, 195 + result_height * i + result_height / 2, 40, MIDDLE_LEFT, BLACK);
+            NewText(TextFormat("(%d) %s", i + 1, lostItems->list[lobbySearchResult[ind]]->title), 70, 195 + result_height * i + result_height * 0.3, 50, MIDDLE_LEFT, BLACK);
+            NewText(TextFormat("%.50s...", lostItems->list[lobbySearchResult[ind]]->content), 70, 195 + result_height * i + result_height * 0.7, 30, MIDDLE_LEFT, BLACK);
         }
     }
 
