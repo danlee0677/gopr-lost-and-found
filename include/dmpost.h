@@ -1,16 +1,15 @@
 #ifndef DMPOST_H
-#define POST_H
+#define DMPOST_H
 
 #include "../include/models.h"
 
-extern char postTitle[MAX_TITLE_LEN];
-extern char postContent[MAX_CONTENT_LEN];
-extern int postSelected;
-extern bool postTagsSelected[6];
-extern char postTargetUser[MAX_USERNAME_LEN];
+extern char DMpostTitle[MAX_TITLE_LEN];
+extern char DMpostContent[MAX_CONTENT_LEN];
+extern int DMpostSelected;
+extern char DMpostReceiver[MAX_USERNAME_LEN];
 
-void PostScreen();
-void PostReset();
-bool PostValid();
+void DMPostScreen();
+void DMPostReset();
+bool DMPostValid();
 
 #endif

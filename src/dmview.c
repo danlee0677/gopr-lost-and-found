@@ -24,6 +24,10 @@ void DMviewScreen() {
 
     // content
     DrawTextBoxed(GetFontDefault(), viewDM->content, (Rectangle){.x = 50, .y = 240, .width = WIDTH - 100, .height = HEIGHT - 240 - 200}, 40, 1, true, BLACK);
+
+    // go back to lobby
+    NewRectangle(50, HEIGHT - 100, WIDTH / 2 - 75, 60, TOP_LEFT, BLACK);
+    NewText("Back (B)", WIDTH / 4 + 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
 }
 
 void DMviewReset() {
