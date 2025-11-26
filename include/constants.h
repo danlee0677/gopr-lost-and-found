@@ -12,5 +12,8 @@
 #define MAX_PASSWORD_LEN 30
 #define MAX_USERNAME_LEN 50
 #define MAX_SEARCH_LEN 41
+#define MAX_LINES 1024
+#define FILE_NAME_MAX_LEN 100
+#define LINES_PER_PAGE 5
 
 #endif

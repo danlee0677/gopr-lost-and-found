@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "../include/constants.h"
 #include "../include/raylib.h"
 #include "../include/textbox.h"
@@ -6,9 +9,7 @@
 #include "../include/dmview.h"
 #include "../include/models.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+
 
 int viewDM_id;
 

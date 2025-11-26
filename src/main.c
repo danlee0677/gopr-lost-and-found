@@ -1,3 +1,6 @@
+/*
+main.c
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,10 +27,13 @@ scene num - description
 3 - lobby
 4 - post(post create)
 5 - view(post viewer)
-6 - DM
+6 - DM list
+7 - DM post
+8 - DM view
+9 - notifications
 */
 
-static int scene = 1;
+static int scene = 0;
 bool typing = false;
 char school_number[50];
 extern LostItemList* lost_items;
@@ -45,7 +51,7 @@ int main() {
     lobby_reset();     // scene=3
     post_reset();      // scene=4
     view_reset();      // scene=5
-    notif_reset();    // scene=8
+    notif_reset();    // scene=9
 
     // todo: remove this when finish
     // strcpy(schoolNumber, "24101");

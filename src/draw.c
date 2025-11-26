@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../include/raylib.h"
-#include "draw.h"
+#include "../include/draw.h"
 
 //given a position and offset, return the new position
 Vector2 offset_position(Vector2 pos, Vector2 size, int offset) {

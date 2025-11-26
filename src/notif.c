@@ -7,10 +7,6 @@
 #include "../include/draw.h"
 #include "../include/notif.h"
 
-#define MAX_LINES 1024
-#define FILE_NAME_MAX_LEN 100
-#define LINES_PER_PAGE 5
-
 extern char school_number[50];
 
 int notif_sellected = 1;
