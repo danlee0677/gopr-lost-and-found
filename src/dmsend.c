@@ -6,19 +6,20 @@
 #include "../include/textbox.h"
 #include "../include/dmsend.h"
 
-char g_DMsend_title[MAX_TITLE_LEN];
-char g_DMsend_content[MAX_CONTENT_LEN];
-char g_DMsend_receiver[MAX_USERNAME_LEN];
-char g_DMsend_school_number[MAX_USERNAME_LEN];
-const char *g_DMsend_error_msg[] = {
+char g_DMsend_title[MAX_TITLE_LEN]; // 보내는 DM 제목
+char g_DMsend_content[MAX_CONTENT_LEN]; // 보내는 DM 본문 내용
+char g_DMsend_receiver[MAX_USERNAME_LEN]; // 보내는 DM 받는 사람
+char g_DMsend_school_number[MAX_USERNAME_LEN]; // 보내는 DM 보내는 사람
+const char *g_DMsend_error_msg[] = { // 에러 메세지
     "",
     "Invalid Title",
     "Invalid Content",
     "Invalid Target User",
 };
-int g_DMsend_selected = 0;
-int g_DMsend_error = 0;
+int g_DMsend_selected = 0; // 텍스트 박스 선택된 곳
+int g_DMsend_error = 0; // 에러 타입
 
+// DM 보내는 화면 띄우기
 void DMsend_screen() {
     // error msg
     if (g_DMsend_error) draw_text(g_DMsend_error_msg[g_DMsend_error], WIDTH - 50, 30, 40, TOP_RIGHT, RED);
@@ -49,6 +50,7 @@ void DMsend_screen() {
     draw_text("Post (P)", (3 * WIDTH / 2 - 25) / 2, (HEIGHT - 55), 40, MIDDLE_CENTER, BLACK);
 }
 
+// DM 보내는 화면 닫기
 void DMsend_reset() {
     memset(g_DMsend_title, '\0', MAX_TITLE_LEN);
     memset(g_DMsend_content, '\0', MAX_CONTENT_LEN);
@@ -57,11 +59,12 @@ void DMsend_reset() {
     g_DMsend_selected = 0;
 }
 
+// DM 보낼 때 형식이 맞는 지 체크하기
 bool DMsend_valid() {
-    if (strlen(g_DMsend_title) == 0) {
+    if (strlen(g_DMsend_title) == 0) { // 제목 길이 0보다 큰지 확인
         g_DMsend_error = 1;
         return false;
-    } else if (strlen(g_DMsend_content) == 0) {
+    } else if (strlen(g_DMsend_content) == 0) { // 본문 길이 0보다 큰지 확인
         g_DMsend_error = 2;
         return false;
     } else if (strlen(g_DMsend_receiver) != 0 && strlen(g_DMsend_receiver) != 5) {

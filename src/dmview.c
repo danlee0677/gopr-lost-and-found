@@ -16,6 +16,7 @@ int g_viewDM_id;
 extern DMList *g_dm_messages;
 DMMessage *g_viewDM;
 
+// DM View 화면 띄우기
 void DMview_screen() {
     // title
     draw_text(g_viewDM->title, WIDTH / 2, 30, 70, TOP_CENTER, BLACK);
@@ -31,5 +32,7 @@ void DMview_screen() {
     draw_text("Back (B)", WIDTH / 4 + 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
 }
 
+// DM view 화면 나가기
 void DMview_reset() {
+    g_viewDM_id = -1;
 }

@@ -9,20 +9,17 @@
 #include "../include/dm.h"
 
 
-int g_dm_selected = -1;
-int g_DMs = 0;
-int g_myDMs = 0;
-int g_DM_page = 1;
-char g_myDM_list[128][256];
-int *g_dm_search_result;
-int g_dm_search_result_length = 0;
-int g_DM_types = 1;
-bool g_DM_sync = false;
+int g_DM_page = 1; // DM 페이지
+int *g_dm_search_result; // DM 이름으로 찾기
+int g_dm_search_result_length = 0; // 조건에 맞는 DM 개수
+int g_DM_types = 1; // 1: Send, 2: Inbox
+bool g_DM_sync = false; // 처음 DM 불러오기
 
 char g_DM_school_number[50];
 
 extern DMList *g_dm_messages;
 
+//DM 화면 띄우기
 void DMscreen() {
     draw_rectangle(50, 55, WIDTH - 100, 100, TOP_LEFT, BLACK);
     draw_text("DM", WIDTH / 2, 110, 70, MIDDLE_CENTER, BLACK);
@@ -56,17 +53,15 @@ void DMscreen() {
     draw_text("Back (B)", WIDTH - 175, 580, 50, MIDDLE_CENTER, BLACK);
 }
 
+// DM 창 끄기
 void DM_reset() {
-    g_dm_selected = 0;
-    g_DMs = 0;
-    g_myDMs = 0;
     g_DM_page = 1;
     g_DM_sync = false;
     g_DM_types = 1;
-    memset(g_myDM_list, 0, sizeof(g_myDM_list));
     memset(g_DM_school_number, 0, sizeof(g_DM_school_number));
 }
 
+// DM 불러오기(한 번만 실행)
 void DMListSync() {
     g_DM_page = 1;
     g_dm_search_result = g_dm_messages->search_message(g_dm_messages, g_DM_school_number, g_DM_types);
