@@ -1,5 +1,20 @@
 /*
 main.c
+2025-11-26 이승준 변수 camel -> snake, 전역변수 앞에 g_, static 앞에 s_, 함수명 변경
+2025-11-26 김현성 notif(공지) 추가(notif.c, scene = 9)
+2025-11-26 안태영 DM 보내기 추가(dmsend.c, scene = 8)
+2025-11-25 안태영 DM 뷰어 추가(dmview.c, scene = 7)
+2025-11-25 안태영 DM 메인화면(dm.c scene = 6)
+2025-11-21 이승준 분실물 보는 화면(view.c scene = 5)
+2025-11-21 이승준 로비 인터페이스 미세조정, pagination 구현, 필터링 구현
+2025-11-20 이승준 로비 로직 구현(태그/검색어 검색, lobby.c scene = 3)
+2025-11-20 이승준 분실물 게시 화면(post.c, scene = 4) 구현완료
+2025-11-19 정용주 lobby.c 검색 영역, 뒤로가기 영역 분할
+2025-11-13 정용주 lobby.c 파일 생성
+2025-11-10 정용주 register 화면 구현(register.c, scene = 2)
+2025-11-09 정용주 맨 처음 화면 구현(menu.c, scene = 0)
+2025-11-09 정용주 login 화면 구현(login.c, scene = 1)
+2025-11-05 정용주 폴더 구조 구성 및 raylib 추가
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -640,5 +655,11 @@ int main() {
     }
 
     CloseWindow();
+
+    for (int i = 0; i < g_lost_items->len; i++) {
+        free(g_lost_items->list[i]);
+        g_lost_items->list[i] = NULL;
+    }
+    free(g_lost_items);
     return 0;
 }
