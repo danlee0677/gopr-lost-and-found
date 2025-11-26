@@ -11,20 +11,20 @@
 
 
 
-int viewDM_id;
+int g_viewDM_id;
 
-extern DMList *dm_messages;
-DMMessage *viewDM;
+extern DMList *g_dm_messages;
+DMMessage *g_viewDM;
 
 void DMview_screen() {
     // title
-    draw_text(viewDM->title, WIDTH / 2, 30, 70, TOP_CENTER, BLACK);
+    draw_text(g_viewDM->title, WIDTH / 2, 30, 70, TOP_CENTER, BLACK);
 
     // sender
-    draw_text(TextFormat("Writer: %s", viewDM->sender), WIDTH - 50, 110, 45, TOP_RIGHT, BLACK);
+    draw_text(TextFormat("Writer: %s", g_viewDM->sender), WIDTH - 50, 110, 45, TOP_RIGHT, BLACK);
 
     // content
-    DrawTextBoxed(GetFontDefault(), viewDM->content, (Rectangle){.x = 50, .y = 240, .width = WIDTH - 100, .height = HEIGHT - 240 - 200}, 40, 1, true, BLACK);
+    DrawTextBoxed(GetFontDefault(), g_viewDM->content, (Rectangle){.x = 50, .y = 240, .width = WIDTH - 100, .height = HEIGHT - 240 - 200}, 40, 1, true, BLACK);
 
     // go back to lobby
     draw_rectangle(50, HEIGHT - 100, WIDTH / 2 - 75, 60, TOP_LEFT, BLACK);

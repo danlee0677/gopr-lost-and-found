@@ -7,15 +7,15 @@
 #include "../include/textbox.h"
 #include "../include/view.h"
 
-extern LostItemList *lost_items;
-int view_item_id;
+extern LostItemList *g_lost_items;
+int g_view_item_id;
 LostItem *view_item;
-char view_school_number[MAX_USERNAME_LEN];
-bool view_sync = false;
-int tag_count;
-char total_tag[300];
+char g_view_school_number[MAX_USERNAME_LEN];
+bool g_view_sync = false;
+int g_tag_count;
+char g_total_tag[300];
 
-extern char *tag_names[6];
+extern char *g_tag_names[6];
 
 void view_screen() {
     // title
@@ -31,7 +31,7 @@ void view_screen() {
     draw_text(TextFormat("Target User: %s", (view_item->target_user ? view_item->target_user : "None")), 50, 160, 45, TOP_LEFT, BLACK);
     
     // Tags
-    draw_text(TextFormat("Tags: %s", (strlen(total_tag) == 0 ? "None" : total_tag)), 50, HEIGHT - 180, 50, TOP_LEFT, BLACK);
+    draw_text(TextFormat("Tags: %s", (strlen(g_total_tag) == 0 ? "None" : g_total_tag)), 50, HEIGHT - 180, 50, TOP_LEFT, BLACK);
 
     // go back to lobby
     draw_rectangle(50, HEIGHT - 100, WIDTH / 2 - 75, 60, TOP_LEFT, BLACK);
@@ -39,31 +39,31 @@ void view_screen() {
     
     // Go to dm or Mark as returned(delete)
     draw_rectangle(WIDTH / 2 + 25, HEIGHT - 100, WIDTH / 2 - 75, 60, TOP_LEFT, BLACK);
-    if (strcmp(view_item->writer, view_school_number) == 0)
+    if (strcmp(view_item->writer, g_view_school_number) == 0)
         draw_text("Mark as Deleted (M)", 3 * WIDTH / 4 - 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
     else 
         draw_text(TextFormat("DM to %s (D)", view_item->writer), 3 * WIDTH / 4 - 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
 }
 
 void view_reset() {
-    view_item_id = -1;
-    view_sync = false;
-    tag_count = 0;
-    total_tag[0] = '\0';
+    g_view_item_id = -1;
+    g_view_sync = false;
+    g_tag_count = 0;
+    g_total_tag[0] = '\0';
 }
 
 void view_synchronize() {
-    tag_count = 0;
-    total_tag[0] = '\0';
+    g_tag_count = 0;
+    g_total_tag[0] = '\0';
     for (int i = 0; i < 6; i++) {
         if (view_item->tags[i]) {
-            if (tag_count == 0) {
-                strcat(total_tag, tag_names[i]);
+            if (g_tag_count == 0) {
+                strcat(g_total_tag, g_tag_names[i]);
             } else {
-                strcat(total_tag, ", ");
-                strcat(total_tag, tag_names[i]);
+                strcat(g_total_tag, ", ");
+                strcat(g_total_tag, g_tag_names[i]);
             }
-            tag_count++;
+            g_tag_count++;
         }
     }
 }
