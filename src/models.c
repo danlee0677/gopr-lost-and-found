@@ -148,7 +148,7 @@ int* lost_item_list_search(LostItemList *self, char keyword[], bool tags[], char
             flag = false;
         }
         // has targeted user, but is not the current user
-        if (strlen(self->list[i]->target_user) != 0 && strcmp(self->list[i]->target_user, _id) != 0) {
+        if (strlen(self->list[i]->target_user) != 0 && strcmp(self->list[i]->target_user, _id) != 0 && strcmp(self->list[i]->writer, _id) != 0) {
             flag = false;
         }
         // search for tags
