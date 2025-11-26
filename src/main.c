@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//안태영ㅄ
 #include "../include/constants.h"
 #include "../include/dm.h"
 #include "../include/draw.h"
@@ -28,7 +27,7 @@ scene num - description
 6 - DM
 */
 
-static int scene = 3;
+static int scene = 1;
 bool typing = false;
 char school_number[50];
 extern LostItemList* lost_items;
@@ -46,9 +45,10 @@ int main() {
     lobby_reset();     // scene=3
     PostReset();      // scene=4
     ViewReset();      // scene=5
+    notifReset();    // scene=8
 
     // todo: remove this when finish
-    strcpy(school_number, "24101");
+    // strcpy(schoolNumber, "24101");
 
     load_lost_item_list(lost_items);
     load_dm_list(dm_messages);
@@ -56,7 +56,6 @@ int main() {
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
-
         DrawText(TextFormat("scene: %d", scene), 20, HEIGHT - 40, 30, BLACK);
         DrawText(TextFormat("typing: %d", typing), 20, HEIGHT - 80, 30, BLACK);
 
@@ -66,8 +65,8 @@ int main() {
 
                 if (IsKeyPressed(KEY_L)) scene = 1;
                 if (IsKeyPressed(KEY_R)) scene = 2;
-
                 break;
+
             case 1:  // login
                 extern int login_selected;
                 extern bool loginValid;
@@ -116,8 +115,8 @@ int main() {
                         scene = 0;
                     }
                 }
-
                 break;
+
             case 2:  // register
                 extern int registerSelected;
                 extern bool registerValid;
@@ -138,19 +137,13 @@ int main() {
                         typing = false;
                         registerSelected = 0;
                     } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (registerSelected == 1)
-                            registerUsername[strlen(registerUsername) - 1] = '\0';
-                        else if (registerSelected == 2)
-                            registerPassword[strlen(registerPassword) - 1] = '\0';
-                        else if (registerSelected == 3)
-                            registerPassword2[strlen(registerPassword2) - 1] = '\0';
+                        if (registerSelected == 1) registerUsername[strlen(registerUsername) - 1] = '\0';
+                        else if (registerSelected == 2) registerPassword[strlen(registerPassword) - 1] = '\0';
+                        else if (registerSelected == 3) registerPassword2[strlen(registerPassword2) - 1] = '\0';
                     } else {
-                        if (registerSelected == 1)
-                            registerUsername[strlen(registerUsername)] = GetCharPressed();
-                        else if (registerSelected == 2)
-                            registerPassword[strlen(registerPassword)] = GetCharPressed();
-                        else if (registerSelected == 3)
-                            registerPassword2[strlen(registerPassword2)] = GetCharPressed();
+                        if (registerSelected == 1) registerUsername[strlen(registerUsername)] = GetCharPressed();
+                        else if (registerSelected == 2) registerPassword[strlen(registerPassword)] = GetCharPressed();
+                        else if (registerSelected == 3) registerPassword2[strlen(registerPassword2)] = GetCharPressed();
                     }
                 } else {
                     if (IsKeyPressed(KEY_U)) {
@@ -174,8 +167,8 @@ int main() {
                         scene = 0;
                     }
                 }
-
                 break;
+
             case 3:  // lobby
                 extern char lobby_school_number[50];
                 extern char lobby_search[MAX_SEARCH_LEN];
@@ -243,6 +236,7 @@ int main() {
                     } else if (IsKeyPressed(KEY_LEFT)) {
                         if (lobby_page > 1) lobby_page--;
                     }
+
                     // navigate upon selecting
                     else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
                         if ((lobby_page - 1) * 5 < lobby_search_result_length) {
@@ -287,17 +281,19 @@ int main() {
                         lobby_reset();
                     } else if (IsKeyPressed(KEY_D)) {
                         scene = 6;
+                        DMreset();
                         lobby_reset();
                     } else if (IsKeyPressed(KEY_L)) {
                         scene = 0;
                         lobby_reset();
-                    } else if(IsKeyPressed(KEY_Q)) {
+                    } else if (IsKeyPressed(KEY_N)) {
                         scene = 9;
+                        notifReset();
                         lobby_reset();
                     }
                 }
-
                 break;
+
             case 4:  // post
                 extern int postSelected;
                 extern bool postTagsSelected[6];
@@ -314,12 +310,9 @@ int main() {
                         typing = false;
                         postSelected = 0;
                     } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (postSelected == 1 && strlen(postTitle) > 0)
-                            postTitle[strlen(postTitle) - 1] = '\0';
-                        else if (postSelected == 2 && strlen(postContent) > 0)
-                            postContent[strlen(postContent) - 1] = '\0';
-                        else if (postSelected == 3 && strlen(postTargetUser) > 0)
-                            postTargetUser[strlen(postTargetUser) - 1] = '\0';
+                        if (postSelected == 1 && strlen(postTitle) > 0) postTitle[strlen(postTitle) - 1] = '\0';
+                        else if (postSelected == 2 && strlen(postContent) > 0) postContent[strlen(postContent) - 1] = '\0';
+                        else if (postSelected == 3 && strlen(postTargetUser) > 0) postTargetUser[strlen(postTargetUser) - 1] = '\0';
                     } else {
                         // todo: word count limit
                         if (postSelected == 1 && strlen(postTitle) < MAX_TITLE_LEN - 1)
@@ -364,8 +357,9 @@ int main() {
                     }
                 }
                 break;
+
             case 5:  // view
-                extern LostItem *viewItem;
+                extern LostItem* viewItem;
                 extern char viewSchoolNumber[MAX_USERNAME_LEN];
                 extern bool viewSync;
                 viewItem = lost_items->list[view_item_id];
@@ -381,7 +375,6 @@ int main() {
                 ViewScreen();
 
                 if (IsKeyPressed(KEY_B)) {
-                    // go back
                     scene = 3;
                     ViewReset();
                 } else if (IsKeyPressed(KEY_D) && strcmp(viewItem->writer, school_number) != 0) {
@@ -395,6 +388,7 @@ int main() {
                     scene = 3;
                 }
                 break;
+
             case 6:  // DM
                 extern int dm_selected;
                 extern bool DM_sync;
@@ -413,8 +407,7 @@ int main() {
 
                 DMscreen();
 
-                if (typing) {
-                } else {                    
+                if (!typing) {
                     if (IsKeyPressed(KEY_S)) {
                         DM_types = 1;
                         DMListSync();
@@ -422,8 +415,7 @@ int main() {
                     else if (IsKeyPressed(KEY_I)) {
                         DM_types = 2;
                         DMListSync();
-                    }
-                    else if (IsKeyPressed(KEY_B)) {
+                    } else if (IsKeyPressed(KEY_B)) {
                         DMreset();
                         scene = 3;
                     }
@@ -478,59 +470,112 @@ int main() {
                 }
                 break;
 
-            case 7: //DM view
+            case 7:  // DM view
                 extern DMMessage* viewDM;
-                viewDM = dm_messages->list[viewDM_id];
+                extern int fromNotif;
 
+                printf("DEBUG: viewDMId = %d, dmMessages->len = %d\n", viewDMId, dmMessages->len);
+
+                viewDM = dm_messages->list[viewDM_id];
                 DMview_screen();
 
-                if (typing) {
-                } else {
+                if (!typing) {
                     if (IsKeyPressed(KEY_B)) {
                         DMviewReset();
-                        scene = 6;
+                        if (fromNotif) {
+                            scene = 9;
+                            fromNotif = 0;
+                        } else {
+                            scene = 6;
+                        }
                     }
                 }
+                break;
+
             case 9:  // notifications
-                extern char notif_lines[5][256];
+                extern int notif_sellected;
+                extern char notif_lines[MAX_LINES][MAX_CONTENT_LEN];
                 extern int notif_count;
                 extern int notif_total_page;
                 extern int current_page;
-                int dmitemid;
+                extern char id[LINES_PER_PAGE][3][20];
+                extern int DMtypes;
+                extern int fromNotif;
 
-                DrawText(TextFormat("notif_count: %d",  notif_count), 20, HEIGHT - 120, 30, BLACK);
+                strcpy(DMschoolNumber, schoolNumber);
+
+                if (notif_sellected == 1) {
+                    DMListSync();
+                    readNotifFile();
+                    notif_sellected = 0;
+                }
+
+                DrawText(TextFormat("notif_count: %d", notif_count), 20, HEIGHT - 120, 30, BLACK);
                 DrawText(TextFormat("notif_total_page: %d", notif_total_page), 20, HEIGHT - 160, 30, BLACK);
                 DrawText(TextFormat("current_page: %d", current_page), 20, HEIGHT - 200, 30, BLACK);
 
                 NotifScreen();
+
                 if (IsKeyPressed(KEY_B)) {
                     scene = 3;
+                } else if (IsKeyPressed(KEY_C)) {
+                    clearNotif();
+                    readNotifFile();
+                    notif_count = 0;
+                    notif_total_page = 1;
+                    current_page = 1;
                 } else if (IsKeyPressed(KEY_RIGHT)) {
-                    if (current_page < notif_total_page? 1 : 0) current_page++;
+                    if (current_page < notif_total_page) current_page++;
+                    readNotifFile();
                 } else if (IsKeyPressed(KEY_LEFT)) {
                     if (current_page > 1) current_page--;
+                    readNotifFile();
                 } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
+                    DMtypes = 2;
+                    readNotifFile();
                     if ((current_page - 1) * 5 < notif_count) {
-
+                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[0][0], id[0][1], atoi(id[0][2]));
+                        notifReset();
+                        scene = 7;
+                        fromNotif = 1;
                     }
-                }  else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
-                    if ((current_page - 1) * 5 < notif_count) {
-
+                } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
+                    DMtypes = 2;
+                    readNotifFile();
+                    if ((current_page - 1) * 5 + 1 < notif_count) {
+                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[1][0], id[1][1], atoi(id[1][2]));
+                        notifReset();
+                        scene = 7;
+                        fromNotif = 1;
                     }
-                }  else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
-                    if ((current_page - 1) * 5 < notif_count) {
-                        
+                } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
+                    DMtypes = 2;
+                    readNotifFile();
+                    if ((current_page - 1) * 5 + 2 < notif_count) {
+                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[2][0], id[2][1], atoi(id[2][2]));
+                        notifReset();
+                        scene = 7;
+                        fromNotif = 1;
                     }
-                }  else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
-                    if ((current_page - 1) * 5 < notif_count) {
-                        
+                } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
+                    DMtypes = 2;
+                    readNotifFile();
+                    if ((current_page - 1) * 5 + 3 < notif_count) {
+                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[3][0], id[3][1], atoi(id[3][2]));
+                        notifReset();
+                        scene = 7;
+                        fromNotif = 1;
                     }
-                }  else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
-                    if ((current_page - 1) * 5 < notif_count) {
-                        
+                } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
+                    DMtypes = 2;
+                    readNotifFile();
+                    if ((current_page - 1) * 5 + 4 < notif_count) {
+                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[4][0], id[4][1], atoi(id[4][2]));
+                        notifReset();
+                        scene = 7;
+                        fromNotif = 1;
                     }
-                } 
-
+                }
                 break;
             
             // case 8: //DM send
@@ -632,6 +677,7 @@ int main() {
 
         EndDrawing();
     }
+
     CloseWindow();
     return 0;
 }

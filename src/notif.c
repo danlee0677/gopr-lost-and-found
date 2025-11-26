@@ -8,68 +8,116 @@
 #include "../include/notif.h"
 
 #define MAX_LINES 1024
+#define FILE_NAME_MAX_LEN 100
 #define LINES_PER_PAGE 5
+#define MAX_TITLE_LEN 250
+#define MAX_CONTENT_LEN 1000
 
-char notif_lines[100][256];
+extern char schoolNumber[50];
+
+int notif_sellected = 1;
+char notif_lines[MAX_LINES][MAX_CONTENT_LEN];
 int notif_count = 0;
 int notif_total_page = 1;
 int current_page = 1;
+int fromNotif = 0;
+const char filename[FILE_NAME_MAX_LEN] = "./data/notif.txt";
+char id[LINES_PER_PAGE][3][20];
+char title[LINES_PER_PAGE][MAX_TITLE_LEN];
+char content[LINES_PER_PAGE][MAX_LINES];
+bool notifToDM = false;
 
 void NotifScreen() {
     draw_rectangle(50, 55, WIDTH - 100, 100, TOP_LEFT, BLACK);
     draw_text("Notifications", WIDTH / 2, 110, 70, MIDDLE_CENTER, BLACK);
-    draw_rectangle(50, 200, WIDTH - 100, HEIGHT - 300, TOP_LEFT, BLACK);
-    
-    readNotifFile();
+    draw_rectangle(50, 200, WIDTH / 2 + 570, HEIGHT - 300, TOP_LEFT, BLACK);
+
+    NewRectangle(WIDTH - 50, 200, 250, 120, TOP_RIGHT, BLACK);
+    NewText("Clear\n All (C)", WIDTH - 175, 235, 50, MIDDLE_CENTER, BLACK);
+    NewRectangle(WIDTH - 50, 360, 250, 120, TOP_RIGHT, BLACK);
+    NewText("Back (B)", WIDTH - 175, 420, 50, MIDDLE_CENTER, BLACK);
 
     float lineGap = (HEIGHT - 290) / 5;
 
-    if(notif_count == 0) {
-        draw_text("No new notifications", WIDTH / 2, HEIGHT / 2, 50, MIDDLE_CENTER, LIGHTGRAY);
+    if (notif_count == 0) {
+        draw_text("No Notifications", WIDTH / 2, HEIGHT / 2, 50, MIDDLE_CENTER, DARKGRAY);
         return;
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < LINES_PER_PAGE; i++) {
         int idx = (current_page - 1) * 5 + i;
         if (idx >= notif_count) break;
-        draw_rectangle(50, 195 + lineGap * i + lineGap / 2, WIDTH - 100, lineGap - 10, MIDDLE_LEFT, BLACK);
-        draw_text(TextFormat("(%d) %s", i + 1, notif_lines[idx]), 70, 195 + lineGap * i + lineGap / 2, 40, MIDDLE_LEFT, BLACK);
+
+        draw_rectangle(50, 195 + lineGap * i + lineGap / 2, WIDTH / 2 + 570, lineGap - 10, MIDDLE_LEFT, BLACK);
+        draw_text(TextFormat("(%d) %s", i + 1, id[i][0]), 70, 175 + lineGap * i + lineGap / 2, 40, MIDDLE_LEFT, BLACK);
+        NewText(TextFormat("%s", title[i]), 70, 175 + lineGap * i + lineGap / 2 + 40, 40, MIDDLE_LEFT, DARKGRAY);
     }
 
-    char pageInfo[64];
-    
-    draw_text("<-         ->", WIDTH / 2, HEIGHT - 60, 50, MIDDLE_CENTER, BLACK);
-    draw_text(TextFormat("%d / %d", current_page, notif_total_page), WIDTH / 2, HEIGHT - 60, 50, MIDDLE_CENTER, BLACK);
+    draw_text("<-         ->", WIDTH / 4 + 300, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
+    draw_text(TextFormat("%d / %d", current_page, notif_total_page), WIDTH / 4 + 300, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
 }
 
 void readNotifFile() {
     notif_count = 0;
-    FILE *f=fopen("../data/notif.txt", "r");
+    FILE *nf = fopen("./data/notif.txt", "r");
 
-    if (f==NULL) {
-        draw_text("No new notifications", WIDTH / 2, HEIGHT / 2, 50, MIDDLE_CENTER, LIGHTGRAY);
+    if (nf == NULL) {
         return;
     }
-    while (fgets(notif_lines[notif_count], sizeof(notif_lines[notif_count]), f)!=NULL){
+
+    while (fgets(notif_lines[notif_count], sizeof(notif_lines[notif_count]), nf) != NULL) {
         size_t len = strlen(notif_lines[notif_count]);
         if (len > 0 && (notif_lines[notif_count][len - 1] == '\n' || notif_lines[notif_count][len - 1] == '\r')) {
             notif_lines[notif_count][len - 1] = '\0';
         }
-        notif_count++;
+
+        sscanf(notif_lines[notif_count], "%s %s %s", id[0][0], id[0][1], id[0][2]);
+        printf("%s %s %d\n", schoolNumber, id[0][1], strcmp(id[0][1], schoolNumber));
+
+        if (strcmp(id[0][1], schoolNumber) == 0)
+            notif_count++;
     }
-    fclose(f);
+    fclose(nf);
+
+    FILE *df;
+    for (int i = 0; i < LINES_PER_PAGE; i++) {
+        int idx = (current_page - 1) * LINES_PER_PAGE + i;
+        if (idx >= notif_count) break;
+
+        sscanf(notif_lines[idx], "%s %s %s", id[i][0], id[i][1], id[i][2]);
+        printf("id[%d]: %s %s %s\n", i, id[i][0], id[i][1], id[i][2]);
+
+        df = fopen(TextFormat("./data/dm/%s %s %s.txt", id[i][0], id[i][1], id[i][2]), "r");
+        fgets(title[i], sizeof(title[i]), df);
+        title[i][strcspn(title[i], "\r\n")] = '\0';
+        fgets(content[i], sizeof(content[i]), df);
+        content[i][strcspn(content[i], "\r\n")] = '\0';
+    }
+
+    fclose(df);
+
     if (notif_count > 0) {
-    notif_total_page = (notif_count + 4) / 5;
+        notif_total_page = (notif_count + (LINES_PER_PAGE - 1)) / LINES_PER_PAGE;
     } else {
         notif_total_page = 1;
     }
 }
 
 void clearNotif() {
-    remove("../data/notif.txt");
     notif_count = 0;
     notif_total_page = 1;
     current_page = 1;
-    FILE *f=fopen("../data/notif.txt", "w");
+    FILE *f = fopen(filename, "w");
     fclose(f);
+}
+
+void notifReset() {
+    notif_sellected = 1;
+    notif_count = 0;
+    notif_total_page = 1;
+    current_page = 1;
+    memset(notif_lines, 0, sizeof(notif_lines));
+    memset(id, 0, sizeof(id));
+    memset(title, 0, sizeof(title));
+    memset(content, 0, sizeof(content));
 }

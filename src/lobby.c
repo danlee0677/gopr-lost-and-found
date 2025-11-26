@@ -77,6 +77,10 @@ void lobby_screen() {
         }
     }
 
+    // Notification
+    NewRectangle(WIDTH - 50, 100, 320, 50, TOP_RIGHT, BLACK);
+    NewText("Notifications (N)", WIDTH - 215, 125, 37, MIDDLE_CENTER, BLACK);
+
     // Post    
     draw_rectangle(WIDTH - 50, 200, 250, 120, TOP_RIGHT, BLACK);
     draw_text("Post (P)", WIDTH - 175, 260, 50, MIDDLE_CENTER, BLACK);

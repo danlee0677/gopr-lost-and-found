@@ -255,6 +255,7 @@ void load_dm_list(DMList *list) {
 
         // DMList에 추가
         list->insert_message(list, title, content, sender, receiver);
+        list->list[list->len - 1]->id = fileId;
     }
 
     UnloadDirectoryFiles(files);
@@ -278,6 +279,14 @@ void save_new_dm(DMMessage *item) {
     // 2줄부터: content (여러 줄 포함 가능)
     fprintf(fptr, "%s", item->content);
 
+    fclose(fptr);
+
+    fptr = fopen("./data/notif.txt", "a+");
+    if (fptr == NULL) {
+        printf("Failed to save new notification\n");
+        return;
+    }
+    fprintf(fptr, "%s %s %d\n", item->sender, item->receiver, item->id);
     fclose(fptr);
 }
 
@@ -318,11 +327,30 @@ int* dm_list_search(DMList *self, char _id[], int type) {
     return ret;
 }
 
+// 채팅 리스트에서 작성자, 수신자, id로 검색, 해당되는 인덱스 반환
+int search_dm_by_elements(DMList *self, char sender[], char receiver[], int id) {
+    int res = 0;
+    printf("Searching DM from %s to %s with id %d\n", sender, receiver, id);
+    for (int i = 0; i < self->len; i++) {
+        printf("DM %d: from %s to %s with id %d\n", i, self->list[i]->sender, self->list[i]->receiver, self->list[i]->id);
+        if(strcmp(self->list[i]->receiver,receiver) == 0) res++;
+        if (strcmp(self->list[i]->sender, sender) == 0 &&
+            strcmp(self->list[i]->receiver, receiver) == 0 &&
+            self->list[i]->id == id) {
+                printf("Found DM at index %d\n", i);
+                return i;
+        }
+    }
+    printf("res: %d\n", res);
+    return -1; // not found
+}
+
 // 채팅 리스트 생성 함수
 DMList* create_dm_list() {
     DMList* ret = (DMList *)malloc(sizeof(DMList));
     ret->insert_message = dm_list_insert_message;
     ret->search_message = dm_list_search;   
+    ret->search_dm_by_elements = search_dm_by_elements;
 
     ret->max_len = 1;
     ret->list = (DMMessage **)malloc(sizeof (DMMessage *));
