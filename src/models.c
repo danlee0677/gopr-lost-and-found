@@ -178,7 +178,7 @@ int lost_item_list_length(int *ind) {
     return ret;
 }
 
-LostItemList *lostItems = create_lost_item_list();
+LostItemList *lost_items = create_lost_item_list();
 
 /*---------------------채팅---------------------*/
 //채팅 리스트에 메세지 추가
@@ -336,4 +336,4 @@ int dm_list_length(int *ind) {
     return ret;
 }
 
-DMList *dmMessages = create_dm_list();
+DMList *dm_messages = create_dm_list();

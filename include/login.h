@@ -1,8 +1,8 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
-void LoginScreen();
-bool LoginCheck();
-void LoginReset();
+void login_screen();
+bool login_check();
+void login_reset();
 
 #endif

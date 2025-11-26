@@ -15,9 +15,9 @@ enum {
     BOTTOM_RIGHT
 };
 
-Vector2 offsetPosition(Vector2 pos, Vector2 size, int offset);
-void NewText(const char *text, float x, float y, int font_size, int offset, Color color);
-void NewCircle(float x, float y, float radius, int offset, Color color);
-void NewRectangle(float x, float y, float width, float height, int offset, Color color);
+Vector2 offset_position(Vector2 pos, Vector2 size, int offset);
+void draw_text(const char *text, float x, float y, int font_size, int offset, Color color);
+void draw_circle(float x, float y, float radius, int offset, Color color);
+void draw_rectangle(float x, float y, float width, float height, int offset, Color color);
 
 #endif

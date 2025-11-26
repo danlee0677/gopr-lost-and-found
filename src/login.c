@@ -5,37 +5,37 @@
 #include "../include/draw.h"
 #include "../include/login.h"
 
-int loginSelected = 0;
-int loginValid = 0;
-char loginUsername[50];
-char loginPassword[50];
+int login_selected = 0;
+int login_valid = 0;
+char login_username[50];
+char login_password[50];
 
-void LoginScreen() {
+void login_screen() {
     //draw the login screen text in the middle of the screen
-    NewText("LOGIN", WIDTH / 2, 150, 100, MIDDLE_CENTER, BLACK);
-    NewText("School Number (U)", WIDTH / 2 - 500, HEIGHT / 2 - 250, 70, TOP_LEFT, BLACK);
-    NewRectangle(WIDTH / 2 - 500, HEIGHT / 2 - 150, 1000, 80, TOP_LEFT, (loginSelected == 1) ? RED : BLACK);
-    NewText(loginUsername, WIDTH / 2 - 480, HEIGHT / 2 - 140, 60, TOP_LEFT, BLACK);
-    NewText("Password (P)", WIDTH / 2 - 500, HEIGHT / 2 - 30, 70, TOP_LEFT, BLACK);
-    NewRectangle(WIDTH / 2 - 500, HEIGHT / 2 + 70, 1000, 80, TOP_LEFT, (loginSelected == 2) ? RED : BLACK);
-    NewText(loginPassword, WIDTH / 2 - 480, HEIGHT / 2 + 80, 60, TOP_LEFT, BLACK);
-    NewText("Login (L)", WIDTH / 2, HEIGHT / 2 + 350, 70, MIDDLE_CENTER, BLACK);
-    NewRectangle(WIDTH / 2, HEIGHT / 2 + 350, 400, 100, MIDDLE_CENTER, BLACK);
-    NewText("Back (B)", WIDTH - 50, 50, 50, TOP_RIGHT, BLACK);
-    NewRectangle(WIDTH - 30, 35, 250, 80, TOP_RIGHT, BLACK);
-    switch(loginValid) {
+    draw_text("LOGIN", WIDTH / 2, 150, 100, MIDDLE_CENTER, BLACK);
+    draw_text("School Number (U)", WIDTH / 2 - 500, HEIGHT / 2 - 250, 70, TOP_LEFT, BLACK);
+    draw_rectangle(WIDTH / 2 - 500, HEIGHT / 2 - 150, 1000, 80, TOP_LEFT, (login_selected == 1) ? RED : BLACK);
+    draw_text(login_username, WIDTH / 2 - 480, HEIGHT / 2 - 140, 60, TOP_LEFT, BLACK);
+    draw_text("Password (P)", WIDTH / 2 - 500, HEIGHT / 2 - 30, 70, TOP_LEFT, BLACK);
+    draw_rectangle(WIDTH / 2 - 500, HEIGHT / 2 + 70, 1000, 80, TOP_LEFT, (login_selected == 2) ? RED : BLACK);
+    draw_text(login_password, WIDTH / 2 - 480, HEIGHT / 2 + 80, 60, TOP_LEFT, BLACK);
+    draw_text("Login (L)", WIDTH / 2, HEIGHT / 2 + 350, 70, MIDDLE_CENTER, BLACK);
+    draw_rectangle(WIDTH / 2, HEIGHT / 2 + 350, 400, 100, MIDDLE_CENTER, BLACK);
+    draw_text("Back (B)", WIDTH - 50, 50, 50, TOP_RIGHT, BLACK);
+    draw_rectangle(WIDTH - 30, 35, 250, 80, TOP_RIGHT, BLACK);
+    switch(login_valid) {
         case 1:
         case 2:
-            NewText("Invalid School Number", WIDTH / 2, HEIGHT / 2 + 220, 50, MIDDLE_CENTER, RED);
+            draw_text("Invalid School Number", WIDTH / 2, HEIGHT / 2 + 220, 50, MIDDLE_CENTER, RED);
             break;
         case 3:
-            NewText("Password must be 8-20 characters", WIDTH / 2, HEIGHT / 2 + 220, 50, MIDDLE_CENTER, RED);
+            draw_text("Password must be 8-20 characters", WIDTH / 2, HEIGHT / 2 + 220, 50, MIDDLE_CENTER, RED);
             break;
         case 4:
-            NewText("Invalid Password", WIDTH / 2, HEIGHT / 2 + 220, 50, MIDDLE_CENTER, RED);
+            draw_text("Invalid Password", WIDTH / 2, HEIGHT / 2 + 220, 50, MIDDLE_CENTER, RED);
             break;
         case 5:
-            NewText("Login Failed", WIDTH / 2, HEIGHT / 2 + 220, 50, MIDDLE_CENTER, RED);
+            draw_text("Login Failed", WIDTH / 2, HEIGHT / 2 + 220, 50, MIDDLE_CENTER, RED);
             break;
     }
 }
@@ -48,34 +48,34 @@ static bool isLetter(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-bool LoginCheck() {
+bool login_check() {
     //username must be 5 numbers, not other letters
-    if (strlen(loginUsername) != 5) {
-        loginValid = 1;
+    if (strlen(login_username) != 5) {
+        login_valid = 1;
         return false;
     }
 
     int flag = 0;
-    for (int i = 0; i < strlen(loginUsername); i++) {
-        if (!isNumber(loginUsername[i])) flag = 1;
+    for (int i = 0; i < strlen(login_username); i++) {
+        if (!isNumber(login_username[i])) flag = 1;
     }
     if (flag) {
-        loginValid = 2;
+        login_valid = 2;
         return false;
     }
 
     //password must be at least 8 characters
-    if (strlen(loginPassword) < 8 || strlen(loginPassword) > 20) {
-        loginValid = 3;
+    if (strlen(login_password) < 8 || strlen(login_password) > 20) {
+        login_valid = 3;
         return false;
     }
     //password must be consisted of numbers and letters
     flag = 0;
-    for (int i = 0; i < strlen(loginPassword); i++) {
-        if (!isNumber(loginPassword[i]) && !isLetter(loginPassword[i])) flag = 1;
+    for (int i = 0; i < strlen(login_password); i++) {
+        if (!isNumber(login_password[i]) && !isLetter(login_password[i])) flag = 1;
     }
     if (flag) {
-        loginValid = 4;
+        login_valid = 4;
         return false;
     }
 
@@ -84,18 +84,18 @@ bool LoginCheck() {
     if (fptr == NULL) return false;
     char username[100], password[100];
     while (fscanf(fptr, "%s %s", username, password) != EOF) {
-        if (strcmp(username, loginUsername) == 0 && strcmp(password, loginPassword) == 0) {
+        if (strcmp(username, login_username) == 0 && strcmp(password, login_password) == 0) {
             fclose(fptr);
             return true;
         }
     }
     fclose(fptr);
-    loginValid = 5;
+    login_valid = 5;
     return false;
 }
 
-void LoginReset() {
-    loginSelected = 0;
-    memset(loginUsername, 0, sizeof(loginUsername));
-    memset(loginPassword, 0, sizeof(loginPassword));
+void login_reset() {
+    login_selected = 0;
+    memset(login_username, 0, sizeof(login_username));
+    memset(login_password, 0, sizeof(login_password));
 }

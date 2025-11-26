@@ -30,28 +30,28 @@ scene num - description
 
 static int scene = 3;
 bool typing = false;
-char schoolNumber[50];
-extern LostItemList* lostItems;
-extern DMList* dmMessages;
-extern int viewItemId;
-extern char DMsendReceiver[MAX_USERNAME_LEN];
-extern int viewDMId;
+char school_number[50];
+extern LostItemList* lost_items;
+extern DMList* dm_messages;
+extern int view_item_id;
+extern char DMsend_receiver[MAX_USERNAME_LEN];
+extern int viewDM_id;
 
 int main() {
     InitWindow(WIDTH, HEIGHT, "LOST AND FOUND");
     SetTargetFPS(60);
 
-    LoginReset();     // scene=1
+    login_reset();     // scene=1
     RegisterReset();  // scene=2
-    LobbyReset();     // scene=3
+    lobby_reset();     // scene=3
     PostReset();      // scene=4
     ViewReset();      // scene=5
 
     // todo: remove this when finish
-    strcpy(schoolNumber, "24101");
+    strcpy(school_number, "24101");
 
-    load_lost_item_list(lostItems);
-    load_dm_list(dmMessages);
+    load_lost_item_list(lost_items);
+    load_dm_list(dm_messages);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -62,56 +62,56 @@ int main() {
 
         switch (scene) {
             case 0:  // main menu
-                MainMenuScreen();
+                menu_screen();
 
                 if (IsKeyPressed(KEY_L)) scene = 1;
                 if (IsKeyPressed(KEY_R)) scene = 2;
 
                 break;
             case 1:  // login
-                extern int loginSelected;
+                extern int login_selected;
                 extern bool loginValid;
-                extern char loginUsername[50];
-                extern char loginPassword[50];
+                extern char login_username[50];
+                extern char login_password[50];
 
-                LoginScreen();
+                login_screen();
 
-                DrawText(TextFormat("loginSelected: %d", loginSelected), 20, HEIGHT - 120, 30, BLACK);
+                DrawText(TextFormat("loginSelected: %d", login_selected), 20, HEIGHT - 120, 30, BLACK);
                 DrawText(TextFormat("loginValid: %d", loginValid), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("loginUsername: %s", loginUsername), 20, HEIGHT - 200, 30, BLACK);
-                DrawText(TextFormat("loginPassword: %s", loginPassword), 20, HEIGHT - 240, 30, BLACK);
+                DrawText(TextFormat("loginUsername: %s", login_username), 20, HEIGHT - 200, 30, BLACK);
+                DrawText(TextFormat("loginPassword: %s", login_password), 20, HEIGHT - 240, 30, BLACK);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
                         typing = false;
-                        loginSelected = 0;
+                        login_selected = 0;
                     } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (loginSelected == 1)
-                            loginUsername[strlen(loginUsername) - 1] = '\0';
-                        else if (loginSelected == 2)
-                            loginPassword[strlen(loginPassword) - 1] = '\0';
+                        if (login_selected == 1)
+                            login_username[strlen(login_username) - 1] = '\0';
+                        else if (login_selected == 2)
+                            login_password[strlen(login_password) - 1] = '\0';
                     } else {
-                        if (loginSelected == 1)
-                            loginUsername[strlen(loginUsername)] = GetCharPressed();
-                        else if (loginSelected == 2)
-                            loginPassword[strlen(loginPassword)] = GetCharPressed();
+                        if (login_selected == 1)
+                            login_username[strlen(login_username)] = GetCharPressed();
+                        else if (login_selected == 2)
+                            login_password[strlen(login_password)] = GetCharPressed();
                     }
                 } else {
                     if (IsKeyPressed(KEY_U)) {
                         typing = true;
-                        loginSelected = 1;
+                        login_selected = 1;
                     } else if (IsKeyPressed(KEY_P)) {
                         typing = true;
-                        loginSelected = 2;
+                        login_selected = 2;
                     } else if (IsKeyPressed(KEY_L)) {
-                        if (LoginCheck()) {
+                        if (login_check()) {
                             loginValid = 0;
-                            strcpy(schoolNumber, loginUsername);
+                            strcpy(school_number, login_username);
                             scene = 3;
                         }
-                        LoginReset();
+                        login_reset();
                     } else if (IsKeyPressed(KEY_B)) {
-                        LoginReset();
+                        login_reset();
                         loginValid = 0;
                         scene = 0;
                     }
@@ -177,123 +177,123 @@ int main() {
 
                 break;
             case 3:  // lobby
-                extern char lobbySchoolNumber[50];
-                extern char lobbySearch[MAX_SEARCH_LEN];
-                extern int lobbySelected;
-                extern int lobbyPage;
-                extern bool lobbyTagsSelected[6];
-                extern int* lobbySearchResult;
-                extern char lobbyDummyUser[1];
-                extern bool lobbyTargetUserSelected;
-                extern int lobbySearchResultLength;
-                extern bool lobbySync;
-                extern bool lobbyFilters[2];
+                extern char lobby_school_number[50];
+                extern char lobby_search[MAX_SEARCH_LEN];
+                extern int lobby_selected;
+                extern int lobby_page;
+                extern bool lobby_tags_selected[6];
+                extern int* lobby_search_result;
+                extern char lobby_dummy_user[1];
+                extern bool lobby_target_user_selected;
+                extern int lobby_search_result_length;
+                extern bool lobby_sync;
+                extern bool lobby_filters[2];
 
-                strcpy(lobbySchoolNumber, schoolNumber);
+                strcpy(lobby_school_number, school_number);
 
-                if (!lobbySync) {
-                    lobbySync = true;
-                    LobbyLostItemListSync();
-                    printf("%d\n", lobbySearchResultLength);
+                if (!lobby_sync) {
+                    lobby_sync = true;
+                    lobby_sync_lost_item_list();
+                    printf("%d\n", lobby_search_result_length);
                 }
 
-                LobbyScreen();
+                lobby_screen();
 
-                DrawText(TextFormat("schoolNumber: %s", lobbySchoolNumber), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("search: %s", lobbySearch), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("selected: %d", lobbySelected), 20, HEIGHT - 200, 30, BLACK);
-                DrawText(TextFormat("page: %d", lobbyPage), 20, HEIGHT - 240, 30, BLACK);
+                DrawText(TextFormat("schoolNumber: %s", lobby_school_number), 20, HEIGHT - 120, 30, BLACK);
+                DrawText(TextFormat("search: %s", lobby_search), 20, HEIGHT - 160, 30, BLACK);
+                DrawText(TextFormat("selected: %d", lobby_selected), 20, HEIGHT - 200, 30, BLACK);
+                DrawText(TextFormat("page: %d", lobby_page), 20, HEIGHT - 240, 30, BLACK);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
                         typing = false;
-                        lobbySelected = 0;
-                        free(lobbySearchResult);
-                        LobbyLostItemListSync();
+                        lobby_selected = 0;
+                        free(lobby_search_result);
+                        lobby_sync_lost_item_list();
                     } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (lobbySelected == 1 && strlen(lobbySearch) > 0) lobbySearch[strlen(lobbySearch) - 1] = '\0';
+                        if (lobby_selected == 1 && strlen(lobby_search) > 0) lobby_search[strlen(lobby_search) - 1] = '\0';
                     } else {
-                        if (lobbySelected == 1 && strlen(lobbySearch) < MAX_SEARCH_LEN - 1) lobbySearch[strlen(lobbySearch)] = GetCharPressed();
+                        if (lobby_selected == 1 && strlen(lobby_search) < MAX_SEARCH_LEN - 1) lobby_search[strlen(lobby_search)] = GetCharPressed();
                     }
-                } else if (lobbySelected == 2) {
+                } else if (lobby_selected == 2) {
                     if (IsKeyPressed(KEY_ENTER)) {
-                        free(lobbySearchResult);
-                        LobbyLostItemListSync();
-                        lobbySelected = 0;
+                        free(lobby_search_result);
+                        lobby_sync_lost_item_list();
+                        lobby_selected = 0;
                     } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1))
-                        lobbyTagsSelected[0] = !lobbyTagsSelected[0];
+                        lobby_tags_selected[0] = !lobby_tags_selected[0];
                     else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2))
-                        lobbyTagsSelected[1] = !lobbyTagsSelected[1];
+                        lobby_tags_selected[1] = !lobby_tags_selected[1];
                     else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3))
-                        lobbyTagsSelected[2] = !lobbyTagsSelected[2];
+                        lobby_tags_selected[2] = !lobby_tags_selected[2];
                     else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4))
-                        lobbyTagsSelected[3] = !lobbyTagsSelected[3];
+                        lobby_tags_selected[3] = !lobby_tags_selected[3];
                     else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5))
-                        lobbyTagsSelected[4] = !lobbyTagsSelected[4];
+                        lobby_tags_selected[4] = !lobby_tags_selected[4];
                     else if (IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6))
-                        lobbyTagsSelected[5] = !lobbyTagsSelected[5];
+                        lobby_tags_selected[5] = !lobby_tags_selected[5];
                 } else {
                     if (IsKeyPressed(KEY_S)) {
                         typing = true;
-                        lobbySelected = 1;
+                        lobby_selected = 1;
                     } else if (IsKeyPressed(KEY_T)) {
-                        lobbySelected = 2;
+                        lobby_selected = 2;
                     } else if (IsKeyPressed(KEY_RIGHT)) {
-                        if (lobbyPage < (lobbySearchResultLength / 5) + (lobbySearchResultLength % 5 ? 1 : 0)) lobbyPage++;
+                        if (lobby_page < (lobby_search_result_length / 5) + (lobby_search_result_length % 5 ? 1 : 0)) lobby_page++;
                     } else if (IsKeyPressed(KEY_LEFT)) {
-                        if (lobbyPage > 1) lobbyPage--;
+                        if (lobby_page > 1) lobby_page--;
                     }
                     // navigate upon selecting
                     else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
-                        if ((lobbyPage - 1) * 5 < lobbySearchResultLength) {
-                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5];
+                        if ((lobby_page - 1) * 5 < lobby_search_result_length) {
+                            view_item_id = lobby_search_result[(lobby_page - 1) * 5];
                             scene = 5;
-                            LobbyReset();
+                            lobby_reset();
                         }
                     } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
-                        if ((lobbyPage - 1) * 5 + 1 < lobbySearchResultLength) {
-                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5 + 1];
+                        if ((lobby_page - 1) * 5 + 1 < lobby_search_result_length) {
+                            view_item_id = lobby_search_result[(lobby_page - 1) * 5 + 1];
                             scene = 5;
-                            LobbyReset();
+                            lobby_reset();
                         }
                     } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
-                        if ((lobbyPage - 1) * 5 + 2 < lobbySearchResultLength) {
-                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5 + 2];
+                        if ((lobby_page - 1) * 5 + 2 < lobby_search_result_length) {
+                            view_item_id = lobby_search_result[(lobby_page - 1) * 5 + 2];
                             scene = 5;
-                            LobbyReset();
+                            lobby_reset();
                         }
                     } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
-                        if ((lobbyPage - 1) * 5 + 3 < lobbySearchResultLength) {
-                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5 + 3];
+                        if ((lobby_page - 1) * 5 + 3 < lobby_search_result_length) {
+                            view_item_id = lobby_search_result[(lobby_page - 1) * 5 + 3];
                             scene = 5;
-                            LobbyReset();
+                            lobby_reset();
                         }
                     } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
-                        if ((lobbyPage - 1) * 5 + 4 < lobbySearchResultLength) {
-                            viewItemId = lobbySearchResult[(lobbyPage - 1) * 5 + 4];
+                        if ((lobby_page - 1) * 5 + 4 < lobby_search_result_length) {
+                            view_item_id = lobby_search_result[(lobby_page - 1) * 5 + 4];
                             scene = 5;
-                            LobbyReset();
+                            lobby_reset();
                         }
                     } else if (IsKeyPressed(KEY_A)) {
-                        lobbyFilters[0] = !lobbyFilters[0];
-                        LobbyLostItemListSync();
+                        lobby_filters[0] = !lobby_filters[0];
+                        lobby_sync_lost_item_list();
                     } else if (IsKeyPressed(KEY_W)) {
-                        lobbyFilters[1] = !lobbyFilters[1];
-                        LobbyLostItemListSync();
+                        lobby_filters[1] = !lobby_filters[1];
+                        lobby_sync_lost_item_list();
                     } else if (IsKeyPressed(KEY_C)) {
-                        LobbyReset();
+                        lobby_reset();
                     } else if (IsKeyPressed(KEY_P)) {
                         scene = 4;
-                        LobbyReset();
+                        lobby_reset();
                     } else if (IsKeyPressed(KEY_D)) {
                         scene = 6;
-                        LobbyReset();
+                        lobby_reset();
                     } else if (IsKeyPressed(KEY_L)) {
                         scene = 0;
-                        LobbyReset();
+                        lobby_reset();
                     } else if(IsKeyPressed(KEY_Q)) {
                         scene = 9;
-                        LobbyReset();
+                        lobby_reset();
                     }
                 }
 
@@ -307,7 +307,7 @@ int main() {
                 extern char postSchoolNumber[MAX_USERNAME_LEN];
 
                 PostScreen();
-                strcpy(postSchoolNumber, schoolNumber);
+                strcpy(postSchoolNumber, school_number);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
@@ -353,8 +353,8 @@ int main() {
                         postTagsSelected[5] = !postTagsSelected[5];
                     } else if (IsKeyPressed(KEY_P)) {
                         if (PostValid()) {
-                            lostItems->insert_lost_item(lostItems, postTitle, postContent, postTargetUser, postSchoolNumber, postTagsSelected, false);
-                            save_new_lost_item(lostItems->list[lostItems->len - 1]);
+                            lost_items->insert_lost_item(lost_items, postTitle, postContent, postTargetUser, postSchoolNumber, postTagsSelected, false);
+                            save_new_lost_item(lost_items->list[lost_items->len - 1]);
                             PostReset();
                             scene = 3;
                         }
@@ -368,10 +368,10 @@ int main() {
                 extern LostItem *viewItem;
                 extern char viewSchoolNumber[MAX_USERNAME_LEN];
                 extern bool viewSync;
-                viewItem = lostItems->list[viewItemId];
+                viewItem = lost_items->list[view_item_id];
 
 
-                strcpy(viewSchoolNumber, schoolNumber);
+                strcpy(viewSchoolNumber, school_number);
 
                 if (!viewSync) {
                     ViewSynchronize();
@@ -384,31 +384,31 @@ int main() {
                     // go back
                     scene = 3;
                     ViewReset();
-                } else if (IsKeyPressed(KEY_D) && strcmp(viewItem->writer, schoolNumber) != 0) {
+                } else if (IsKeyPressed(KEY_D) && strcmp(viewItem->writer, school_number) != 0) {
                     // todo: directly to DM
-                    strcpy(DMsendReceiver, viewItem->writer);
+                    strcpy(DMsend_receiver, viewItem->writer);
                     scene = 8;
-                } else if (IsKeyPressed(KEY_M) && strcmp(viewItem->writer, schoolNumber) == 0) {
+                } else if (IsKeyPressed(KEY_M) && strcmp(viewItem->writer, school_number) == 0) {
                     // mark as deleted
-                    lostItems->delete_lost_item(lostItems, viewItemId);
+                    lost_items->delete_lost_item(lost_items, view_item_id);
                     ViewReset();
                     scene = 3;
                 }
                 break;
             case 6:  // DM
-                extern int DMselected;
-                extern bool DMsync;
-                extern char DMschoolNumber[50];
-                extern int DMtypes;
-                extern int dmSearchResultLength;
-                extern int* dmSearchResult;
-                extern int DMpage;
+                extern int dm_selected;
+                extern bool DM_sync;
+                extern char DM_school_number[50];
+                extern int DM_types;
+                extern int dm_search_result_length;
+                extern int* dm_search_result;
+                extern int DM_page;
 
-                strcpy(DMschoolNumber, schoolNumber);
+                strcpy(DM_school_number, school_number);
 
-                if (!DMsync) {
+                if (!DM_sync) {
                     DMListSync();
-                    DMsync = true;
+                    DM_sync = true;
                 }
 
                 DMscreen();
@@ -416,11 +416,11 @@ int main() {
                 if (typing) {
                 } else {                    
                     if (IsKeyPressed(KEY_S)) {
-                        DMtypes = 1;
+                        DM_types = 1;
                         DMListSync();
                     }
                     else if (IsKeyPressed(KEY_I)) {
-                        DMtypes = 2;
+                        DM_types = 2;
                         DMListSync();
                     }
                     else if (IsKeyPressed(KEY_B)) {
@@ -429,48 +429,48 @@ int main() {
                     }
 
                     else if (IsKeyPressed(KEY_RIGHT)) {
-                        if (DMpage < (dmSearchResultLength / 7) + (dmSearchResultLength % 7 ? 1 : 0)) DMpage++;
+                        if (DM_page < (dm_search_result_length / 7) + (dm_search_result_length % 7 ? 1 : 0)) DM_page++;
                     } else if (IsKeyPressed(KEY_LEFT)) {
-                        if (DMpage > 1) DMpage--;
+                        if (DM_page > 1) DM_page--;
                     } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
-                        if ((DMpage - 1) * 5 < dmSearchResultLength) {
-                            viewDMId = dmSearchResult[(DMpage - 1) * 7];
+                        if ((DM_page - 1) * 5 < dm_search_result_length) {
+                            viewDM_id = dm_search_result[(DM_page - 1) * 7];
                             scene = 7;
                             DMreset();
                         }
                     } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
-                        if ((DMpage - 1) * 7 + 1 < dmSearchResultLength) {
-                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 1];
+                        if ((DM_page - 1) * 7 + 1 < dm_search_result_length) {
+                            viewDM_id = dm_search_result[(DM_page - 1) * 7 + 1];
                             scene = 7;
                             DMreset();
                         }
                     } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
-                        if ((DMpage - 1) * 7 + 2 < dmSearchResultLength) {
-                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 2];
+                        if ((DM_page - 1) * 7 + 2 < dm_search_result_length) {
+                            viewDM_id = dm_search_result[(DM_page - 1) * 7 + 2];
                             scene = 7;
                             DMreset();
                         }
                     } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
-                        if ((DMpage - 1) * 7 + 3 < dmSearchResultLength) {
-                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 3];
+                        if ((DM_page - 1) * 7 + 3 < dm_search_result_length) {
+                            viewDM_id = dm_search_result[(DM_page - 1) * 7 + 3];
                             scene = 7;
                             DMreset();
                         }
                     } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
-                        if ((DMpage - 1) * 7 + 4 < dmSearchResultLength) {
-                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 4];
+                        if ((DM_page - 1) * 7 + 4 < dm_search_result_length) {
+                            viewDM_id = dm_search_result[(DM_page - 1) * 7 + 4];
                             scene = 7;
                             DMreset();
                         }
                     } else if (IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6)) {
-                        if ((DMpage - 1) * 7 + 5 < dmSearchResultLength) {
-                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 5];
+                        if ((DM_page - 1) * 7 + 5 < dm_search_result_length) {
+                            viewDM_id = dm_search_result[(DM_page - 1) * 7 + 5];
                             scene = 7;
                             DMreset();
                         }
                     } else if (IsKeyPressed(KEY_SEVEN) || IsKeyPressed(KEY_KP_7)) {
-                        if ((DMpage - 1) * 7 + 6 < dmSearchResultLength) {
-                            viewDMId = dmSearchResult[(DMpage - 1) * 7 + 6];
+                        if ((DM_page - 1) * 7 + 6 < dm_search_result_length) {
+                            viewDM_id = dm_search_result[(DM_page - 1) * 7 + 6];
                             scene = 7;
                             DMreset();
                         }
@@ -480,9 +480,9 @@ int main() {
 
             case 7: //DM view
                 extern DMMessage* viewDM;
-                viewDM = dmMessages->list[viewDMId];
+                viewDM = dm_messages->list[viewDM_id];
 
-                DMviewScreen();
+                DMview_screen();
 
                 if (typing) {
                 } else {
@@ -582,31 +582,31 @@ int main() {
             //     break;
             
             case 8: //DM send
-                extern int DMsendSelected;
-                extern char DMsendTitle[MAX_TITLE_LEN];
-                extern char DMsendContent[MAX_CONTENT_LEN];
-                extern char DMsendReceiver[MAX_USERNAME_LEN];
-                extern char DMsendSchoolNumber[MAX_USERNAME_LEN];
+                extern int DMsend_selected;
+                extern char DMsend_title[MAX_TITLE_LEN];
+                extern char DMsend_content[MAX_CONTENT_LEN];
+                extern char DMsend_receiver[MAX_USERNAME_LEN];
+                extern char DMsend_school_number[MAX_USERNAME_LEN];
 
-                strcpy(DMsendSchoolNumber, schoolNumber);
+                strcpy(DMsend_school_number, school_number);
                 
-                DMsendScreen();
+                DMsend_screen();
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
                         typing = false;
-                        DMsendSelected = 0;
+                        DMsend_selected = 0;
                     } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (DMsendSelected == 1 && strlen(DMsendTitle) > 0)
-                            DMsendTitle[strlen(DMsendTitle) - 1] = '\0';
-                        else if (DMsendSelected == 2 && strlen(DMsendContent) > 0)
-                            DMsendContent[strlen(DMsendContent) - 1] = '\0';
+                        if (DMsend_selected == 1 && strlen(DMsend_title) > 0)
+                            DMsend_title[strlen(DMsend_title) - 1] = '\0';
+                        else if (DMsend_selected == 2 && strlen(DMsend_content) > 0)
+                            DMsend_content[strlen(DMsend_content) - 1] = '\0';
                     } else {
                         // todo: word count limit
-                        if (DMsendSelected == 1 && strlen(DMsendTitle) < MAX_TITLE_LEN - 1)
-                            DMsendTitle[strlen(DMsendTitle)] = GetCharPressed();
-                        else if (DMsendSelected == 2 && strlen(DMsendContent) < MAX_CONTENT_LEN - 1)
-                            DMsendContent[strlen(DMsendContent)] = GetCharPressed();
+                        if (DMsend_selected == 1 && strlen(DMsend_title) < MAX_TITLE_LEN - 1)
+                            DMsend_title[strlen(DMsend_title)] = GetCharPressed();
+                        else if (DMsend_selected == 2 && strlen(DMsend_content) < MAX_CONTENT_LEN - 1)
+                            DMsend_content[strlen(DMsend_content)] = GetCharPressed();
                     }
                 } else {
                     if (IsKeyPressed(KEY_B)) {
@@ -614,15 +614,15 @@ int main() {
                         scene = 5;
                     } else if (IsKeyPressed(KEY_T)) {
                         typing = true;
-                        DMsendSelected = 1;
+                        DMsend_selected = 1;
                     } else if (IsKeyPressed(KEY_C)) {
                         typing = true;
-                        DMsendSelected = 2;
+                        DMsend_selected = 2;
                     } else if (IsKeyPressed(KEY_P)) {
-                        if (DMsendValid()) {
-                            dmMessages->insert_message(dmMessages, DMsendTitle, DMsendContent, DMsendSchoolNumber, DMsendReceiver);
-                            save_new_dm(dmMessages->list[dmMessages->len - 1]);
-                            DMsendReset();
+                        if (DMsend_valid()) {
+                            dm_messages->insert_message(dm_messages, DMsend_title, DMsend_content, DMsend_school_number, DMsend_receiver);
+                            save_new_dm(dm_messages->list[dm_messages->len - 1]);
+                            DMsend_reset();
                             scene = 5;
                         }
                     }

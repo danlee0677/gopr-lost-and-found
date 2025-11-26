@@ -1,8 +1,8 @@
 #ifndef LOBBY_H
 #define LOBBY_H
 
-void LobbyScreen();
-void LobbyReset();
-void LobbyLostItemListSync();
+void lobby_screen();
+void lobby_reset();
+void lobby_sync_lost_item_list();
 
 #endif // LOBBY_H

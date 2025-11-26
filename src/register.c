@@ -13,36 +13,36 @@ char registerPassword2[100];
 
 void RegisterScreen() {
     //draw the login screen text in the middle of the screen
-    NewText("REGISTER", WIDTH / 2, 150, 100, MIDDLE_CENTER, BLACK);
-    NewText("School Number (U)", WIDTH / 2 - 500, HEIGHT / 2 - 290, 70, TOP_LEFT, BLACK);
-    NewRectangle(WIDTH / 2 - 500, HEIGHT / 2 - 200, 1000, 80, TOP_LEFT, (registerSelected == 1) ? RED : BLACK);
-    NewText(registerUsername, WIDTH / 2 - 480, HEIGHT / 2 - 190, 60, TOP_LEFT, BLACK);
-    NewText("Password (P)", WIDTH / 2 - 500, HEIGHT / 2 - 90, 70, TOP_LEFT, BLACK);
-    NewRectangle(WIDTH / 2 - 500, HEIGHT / 2, 1000, 80, TOP_LEFT, (registerSelected == 2) ? RED : BLACK);
-    NewText(registerPassword, WIDTH / 2 - 480, HEIGHT / 2 + 10, 60, TOP_LEFT, BLACK);
-    NewText("Confirm Password (C)", WIDTH / 2 - 500, HEIGHT / 2 + 100, 70, TOP_LEFT, BLACK);
-    NewRectangle(WIDTH / 2 - 500, HEIGHT / 2 + 190, 1000, 80, TOP_LEFT, (registerSelected == 3) ? RED : BLACK);
-    NewText(registerPassword2, WIDTH / 2 - 480, HEIGHT / 2 + 200, 60, TOP_LEFT, BLACK);
-    NewText("Register (R)", WIDTH / 2, HEIGHT / 2 + 420, 70, MIDDLE_CENTER, BLACK);
-    NewRectangle(WIDTH / 2, HEIGHT / 2 + 420, 500, 100, MIDDLE_CENTER, BLACK);
-    NewText("Back (B)", WIDTH - 50, 50, 50, TOP_RIGHT, BLACK);
-    NewRectangle(WIDTH - 30, 35, 250, 80, TOP_RIGHT, BLACK);
+    draw_text("REGISTER", WIDTH / 2, 150, 100, MIDDLE_CENTER, BLACK);
+    draw_text("School Number (U)", WIDTH / 2 - 500, HEIGHT / 2 - 290, 70, TOP_LEFT, BLACK);
+    draw_rectangle(WIDTH / 2 - 500, HEIGHT / 2 - 200, 1000, 80, TOP_LEFT, (registerSelected == 1) ? RED : BLACK);
+    draw_text(registerUsername, WIDTH / 2 - 480, HEIGHT / 2 - 190, 60, TOP_LEFT, BLACK);
+    draw_text("Password (P)", WIDTH / 2 - 500, HEIGHT / 2 - 90, 70, TOP_LEFT, BLACK);
+    draw_rectangle(WIDTH / 2 - 500, HEIGHT / 2, 1000, 80, TOP_LEFT, (registerSelected == 2) ? RED : BLACK);
+    draw_text(registerPassword, WIDTH / 2 - 480, HEIGHT / 2 + 10, 60, TOP_LEFT, BLACK);
+    draw_text("Confirm Password (C)", WIDTH / 2 - 500, HEIGHT / 2 + 100, 70, TOP_LEFT, BLACK);
+    draw_rectangle(WIDTH / 2 - 500, HEIGHT / 2 + 190, 1000, 80, TOP_LEFT, (registerSelected == 3) ? RED : BLACK);
+    draw_text(registerPassword2, WIDTH / 2 - 480, HEIGHT / 2 + 200, 60, TOP_LEFT, BLACK);
+    draw_text("Register (R)", WIDTH / 2, HEIGHT / 2 + 420, 70, MIDDLE_CENTER, BLACK);
+    draw_rectangle(WIDTH / 2, HEIGHT / 2 + 420, 500, 100, MIDDLE_CENTER, BLACK);
+    draw_text("Back (B)", WIDTH - 50, 50, 50, TOP_RIGHT, BLACK);
+    draw_rectangle(WIDTH - 30, 35, 250, 80, TOP_RIGHT, BLACK);
     switch(registerValid) {
         case 1:
         case 2:
-            NewText("Invalid School Number", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
+            draw_text("Invalid School Number", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
             break;
         case 3:
-            NewText("Password must be the same", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
+            draw_text("Password must be the same", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
             break;
         case 4:
-            NewText("Password must be 8-20 characters", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
+            draw_text("Password must be 8-20 characters", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
             break;
         case 5:
-            NewText("Invalid Password", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
+            draw_text("Invalid Password", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
             break;
         case 6:
-            NewText("Already Registered", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
+            draw_text("Already Registered", WIDTH / 2, HEIGHT / 2 + 320, 50, MIDDLE_CENTER, RED);
             break;
     }
 }

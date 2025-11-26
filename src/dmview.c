@@ -10,24 +10,24 @@
 #include <string.h>
 #include <stdlib.h>
 
-int viewDMId;
+int viewDM_id;
 
-extern DMList *dmMessages;
+extern DMList *dm_messages;
 DMMessage *viewDM;
 
-void DMviewScreen() {
+void DMview_screen() {
     // title
-    NewText(viewDM->title, WIDTH / 2, 30, 70, TOP_CENTER, BLACK);
+    draw_text(viewDM->title, WIDTH / 2, 30, 70, TOP_CENTER, BLACK);
 
     // sender
-    NewText(TextFormat("Writer: %s", viewDM->sender), WIDTH - 50, 110, 45, TOP_RIGHT, BLACK);
+    draw_text(TextFormat("Writer: %s", viewDM->sender), WIDTH - 50, 110, 45, TOP_RIGHT, BLACK);
 
     // content
     DrawTextBoxed(GetFontDefault(), viewDM->content, (Rectangle){.x = 50, .y = 240, .width = WIDTH - 100, .height = HEIGHT - 240 - 200}, 40, 1, true, BLACK);
 
     // go back to lobby
-    NewRectangle(50, HEIGHT - 100, WIDTH / 2 - 75, 60, TOP_LEFT, BLACK);
-    NewText("Back (B)", WIDTH / 4 + 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
+    draw_rectangle(50, HEIGHT - 100, WIDTH / 2 - 75, 60, TOP_LEFT, BLACK);
+    draw_text("Back (B)", WIDTH / 4 + 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
 }
 
 void DMviewReset() {

@@ -3,14 +3,14 @@
 
 #include "../include/models.h"
 
-extern char DMsendTitle[MAX_TITLE_LEN];
-extern char DMsendContent[MAX_CONTENT_LEN];
-extern int DMsendSelected;
-extern char DMsendReceiver[MAX_USERNAME_LEN];
+extern char DMsend_title[MAX_TITLE_LEN];
+extern char DMsend_content[MAX_CONTENT_LEN];
+extern int DMsend_selected;
+extern char DMsend_receiver[MAX_USERNAME_LEN];
 
-void DMsendScreen();
-void DMsendReset();
-bool DMsendValid();
+void DMsend_screen();
+void DMsend_reset();
+bool DMsend_valid();
 
 #endif
 

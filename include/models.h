@@ -49,7 +49,7 @@ typedef struct DMList_t {
     int len, max_len;
 } DMList;
 
-extern LostItemList *lostItems;
+extern LostItemList *lost_items;
 extern DMList *dmList; 
 
 void load_lost_item_list(LostItemList *list);

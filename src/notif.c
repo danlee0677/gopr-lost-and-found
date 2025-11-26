@@ -16,30 +16,30 @@ int notif_total_page = 1;
 int current_page = 1;
 
 void NotifScreen() {
-    NewRectangle(50, 55, WIDTH - 100, 100, TOP_LEFT, BLACK);
-    NewText("Notifications", WIDTH / 2, 110, 70, MIDDLE_CENTER, BLACK);
-    NewRectangle(50, 200, WIDTH - 100, HEIGHT - 300, TOP_LEFT, BLACK);
+    draw_rectangle(50, 55, WIDTH - 100, 100, TOP_LEFT, BLACK);
+    draw_text("Notifications", WIDTH / 2, 110, 70, MIDDLE_CENTER, BLACK);
+    draw_rectangle(50, 200, WIDTH - 100, HEIGHT - 300, TOP_LEFT, BLACK);
     
     readNotifFile();
 
     float lineGap = (HEIGHT - 290) / 5;
 
     if(notif_count == 0) {
-        NewText("No new notifications", WIDTH / 2, HEIGHT / 2, 50, MIDDLE_CENTER, LIGHTGRAY);
+        draw_text("No new notifications", WIDTH / 2, HEIGHT / 2, 50, MIDDLE_CENTER, LIGHTGRAY);
         return;
     }
 
     for (int i = 0; i < 5; i++) {
         int idx = (current_page - 1) * 5 + i;
         if (idx >= notif_count) break;
-        NewRectangle(50, 195 + lineGap * i + lineGap / 2, WIDTH - 100, lineGap - 10, MIDDLE_LEFT, BLACK);
-        NewText(TextFormat("(%d) %s", i + 1, notif_lines[idx]), 70, 195 + lineGap * i + lineGap / 2, 40, MIDDLE_LEFT, BLACK);
+        draw_rectangle(50, 195 + lineGap * i + lineGap / 2, WIDTH - 100, lineGap - 10, MIDDLE_LEFT, BLACK);
+        draw_text(TextFormat("(%d) %s", i + 1, notif_lines[idx]), 70, 195 + lineGap * i + lineGap / 2, 40, MIDDLE_LEFT, BLACK);
     }
 
     char pageInfo[64];
     
-    NewText("<-         ->", WIDTH / 2, HEIGHT - 60, 50, MIDDLE_CENTER, BLACK);
-    NewText(TextFormat("%d / %d", current_page, notif_total_page), WIDTH / 2, HEIGHT - 60, 50, MIDDLE_CENTER, BLACK);
+    draw_text("<-         ->", WIDTH / 2, HEIGHT - 60, 50, MIDDLE_CENTER, BLACK);
+    draw_text(TextFormat("%d / %d", current_page, notif_total_page), WIDTH / 2, HEIGHT - 60, 50, MIDDLE_CENTER, BLACK);
 }
 
 void readNotifFile() {
@@ -47,7 +47,7 @@ void readNotifFile() {
     FILE *f=fopen("../data/notif.txt", "r");
 
     if (f==NULL) {
-        NewText("No new notifications", WIDTH / 2, HEIGHT / 2, 50, MIDDLE_CENTER, LIGHTGRAY);
+        draw_text("No new notifications", WIDTH / 2, HEIGHT / 2, 50, MIDDLE_CENTER, LIGHTGRAY);
         return;
     }
     while (fgets(notif_lines[notif_count], sizeof(notif_lines[notif_count]), f)!=NULL){
