@@ -4,6 +4,7 @@
 #define WIDTH 1920
 #define HEIGHT 1000 // 1080
 
+// 최대 길이 상수
 #define MAX_TITLE_LEN 71
 #define MAX_NAME_LEN 101
 #define MAX_PICT_LEN 101
