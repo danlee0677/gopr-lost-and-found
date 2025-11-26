@@ -105,8 +105,10 @@ void read_notif_file() {
         g_title[i][strcspn(g_title[i], "\r\n")] = '\0';
         fgets(g_notif_content[i], sizeof(g_notif_content[i]), df);
         g_notif_content[i][strcspn(g_notif_content[i], "\r\n")] = '\0';
+        
+        fclose(df);
+        df = NULL;
     }
-    fclose(df);
 
     // 전체 페이지 수 계산
     if (g_notif_count > 0) {
@@ -118,11 +120,56 @@ void read_notif_file() {
 
 // 알림 파일 비우기
 void clear_notif() {
+    // 기존 파일 열기 (읽기)
+    FILE *in = fopen(g_notif_filename, "r");
+    if (in == NULL) {
+        // 파일이 없으면 변수만 초기화
+        g_notif_count = 0;
+        g_notif_total_page = 1;
+        g_current_page = 1;
+        return;
+    }
+
+    // 유지할 줄들을 저장하는 배열
+    char keep_lines[MAX_LINES][MAX_CONTENT_LEN];
+    int keep_count = 0;
+
+    // 파일에서 한 줄씩 읽기
+    char line[MAX_CONTENT_LEN];
+    char sender[20], receiver[20], msgid[20];
+
+    // 수신자가 내가 아닌 줄만 저장
+    while (fgets(line, sizeof(line), in) != NULL) {
+        // 수신자가 내가 아니면 유지
+        sscanf(line, "%19s %19s %19s", sender, receiver, msgid);
+        if (strcmp(receiver, g_school_number) != 0) {
+            if (keep_count < MAX_LINES) {
+                strncpy(keep_lines[keep_count], line, MAX_CONTENT_LEN - 1);
+                keep_lines[keep_count][MAX_CONTENT_LEN - 1] = '\0';
+                keep_count++;
+            }
+        }
+    }
+
+    fclose(in);
+
+    // 파일을 다시 열어 덮어쓰기
+    FILE *out = fopen(g_notif_filename, "w");
+    if (out == NULL) {
+        // 파일 열기 실패 시 변수만 초기화
+        g_notif_count = 0;
+        g_notif_total_page = 1;
+        g_current_page = 1;
+        return;
+    }
+
+    for (int i = 0; i < keep_count; i++) {
+        fputs(keep_lines[i], out);
+    }
+    fclose(out);
     g_notif_count = 0;
     g_notif_total_page = 1;
     g_current_page = 1;
-    FILE *f = fopen(g_notif_filename, "w");
-    fclose(f);
 }
 
 // 알림창 초기화
