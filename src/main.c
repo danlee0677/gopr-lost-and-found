@@ -80,8 +80,8 @@ int main() {
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawText(TextFormat("scene: %d", s_scene), 20, HEIGHT - 40, 30, BLACK);
-        DrawText(TextFormat("typing: %d", g_typing), 20, HEIGHT - 80, 30, BLACK);
+        // DrawText(TextFormat("scene: %d", s_scene), 20, HEIGHT - 40, 30, BLACK);
+        // DrawText(TextFormat("typing: %d", g_typing), 20, HEIGHT - 80, 30, BLACK);
 
         switch (s_scene) {
             case 0:  // main menu
