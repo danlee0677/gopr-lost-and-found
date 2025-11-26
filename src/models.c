@@ -49,6 +49,7 @@ void load_lost_item_list(LostItemList *list) {
     fclose(fptr);
 }
 
+// 새로운 분실물 게시글 저장
 void save_new_lost_item(LostItem *item) {
     FILE *fptr = fopen("./data/lostitems.txt", "a+");
     if (fptr == NULL) {
@@ -60,15 +61,15 @@ void save_new_lost_item(LostItem *item) {
     strcpy(save_title, item->title);
     strcpy(save_content, item->content);
     for (int i = 0; i < strlen(item->title); i++) {
-        if (save_title[i] == ' ') save_title[i] = '_';
+        if (save_title[i] == ' ') save_title[i] = '_'; // 공백 _로 변환: fscanf용
     }
     for (int i = 0; i < strlen(item->content); i++) {
-        if (save_content[i] == ' ') save_content[i] = '_';
+        if (save_content[i] == ' ') save_content[i] = '_'; // 공백 _로 변환: fscanf용
     }
     char save_tag[7];
-    for (int i = 0; i < 6; i++) save_tag[i] = item->tags[i] + '0';
+    for (int i = 0; i < 6; i++) save_tag[i] = item->tags[i] + '0'; // 태그 str으로 변환
     save_tag[6] = '\0';
-    char save_user_temp[6] = "00000"; // to prevent missing target user when loading & saving
+    char save_user_temp[6] = "00000"; // to prevent missing target user when loading & saving // 저장할 때 공백 아니게 함
     fprintf(fptr, "%s %s %d %s %s %s\n", save_title, save_content, (int)item->deleted, (strlen(item->target_user) == 0 ? save_user_temp : item->target_user), save_tag, item->writer);
 
     fclose(fptr);
@@ -91,12 +92,12 @@ void lost_item_list_insert_lost_item(LostItemList *self, char title[], char cont
         self->list[self->len++] = new_item;
     } else {
         self->max_len *= 2; // 배열 크기 확장
-        self->list = (LostItem **)realloc(self->list, sizeof(LostItem *) * self->max_len);
+        self->list = (LostItem **)realloc(self->list, sizeof(LostItem *) * self->max_len); // 용량 2배
         lost_item_list_insert_lost_item(self, title, content, target_user, writer, tags, deleted); // 재귀 호출로 삽입 재시도
     }
 }
 
-// 분실물 삭제 함수
+// 분실물 삭제 함수: soft delete
 // ID 범위만 체크하며 삭제 플래그 처리
 void lost_item_list_delete_lost_item(LostItemList *self, int _id) {
     FILE *fptr = fopen("./data/lostitems.txt", "r+");
@@ -183,13 +184,14 @@ LostItemList* create_lost_item_list() {
     return ret;
 }
 
+// 반환된 검색 결과(search result)의 길이 계산
 int lost_item_list_length(int *ind) {
     int ret = 0;
     while (ind[ret] != -1) ret++;
     return ret;
 }
 
-LostItemList *g_lost_items;
+LostItemList *g_lost_items; // 전체 분실물 게시글 담는 변수
 
 /*---------------------채팅---------------------*/
 //채팅 리스트에 메세지 추가
@@ -375,4 +377,4 @@ int dm_list_length(int *ind) {
     return ret;
 }
 
-DMList *g_dm_messages;
+DMList *g_dm_messages; // 채팅 메시지 담는 변수
