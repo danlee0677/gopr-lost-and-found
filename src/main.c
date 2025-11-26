@@ -1,5 +1,5 @@
 /*
-main.c
+main.c: 이벤트 처리 등
 2025-11-26 이승준 변수 camel -> snake, 전역변수 앞에 g_, static 앞에 s_, 함수명 변경
 2025-11-26 김현성 notif(공지) 추가(notif.c, scene = 9)
 2025-11-26 안태영 DM 보내기 추가(dmsend.c, scene = 8)
