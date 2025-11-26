@@ -22,17 +22,17 @@ lobby.c: lobby(scene = 3) 모양 그리기
 #include "../include/lobby.h"
 
 char g_lobby_school_number[50];
-char g_lobby_search[MAX_SEARCH_LEN];
-int g_lobby_selected = 0;
-int g_lobby_page = 1;
-bool g_lobby_tags_selected[6] = {false, false, false, false, false, false};
-extern LostItemList* g_lost_items;
-int *g_lobby_search_result = NULL;
-int g_lobby_search_result_length = 0;
-char g_lobby_dummy_user[1] = "";
+char g_lobby_search[MAX_SEARCH_LEN]; // 검색어 담는 변수
+int g_lobby_selected = 0; // 로비 선택: 1 - 검색, 2 - 태그
+int g_lobby_page = 1; // pagination 현재 페이지
+bool g_lobby_tags_selected[6] = {false, false, false, false, false, false}; // 선택된 태그 필터링
+extern LostItemList* g_lost_items; // 분실물 포인터를 담은 리스트의 포인터
+int *g_lobby_search_result = NULL; // 검색 결과
+int g_lobby_search_result_length = 0; // 로비에서 검색한 결과 총 개수
+char g_lobby_dummy_user[1] = ""; // placeholder 유저
 bool g_lobby_target_user_selected = false;
 bool g_lobby_sync = false; // for syncing the lobby, only at first
-bool g_lobby_filters[2] = {false, false};
+bool g_lobby_filters[2] = {false, false}; // 내가 작성한 글 또는 나를 대상으로 한 글 필터
 
 /*
 lobbyselected:
@@ -42,7 +42,7 @@ lobbyselected:
 
 const char *g_tag_names[6] = {"Electronics", "Clothings", "Bags", "Stationery", "Personal", "Special"};
 const char *g_tag_numbers[6] = {"1", "2", "3", "4", "5", "6"};
-const char *g_filter_names[2] = {"A", "W"};
+const char *g_filter_names[2] = {"A", "W"}; // 필터링 키
 
 // 로비 요소들 blit하는 용도
 void lobby_screen() {

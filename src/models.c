@@ -2,13 +2,13 @@
 models.c: 분실물 struct 및 struct 관리 함수, DM 메시지 struct 및 관리 함수
 2025-11-26 이승준 전역변수 이름(g_) rename
 2025-11-26 김현성 notif checked
-2025-11-26 안태영 DM sending
-2025-11-25 안태영 I made DM main screen
+2025-11-26 안태영 DM search 추가
+2025-11-25 안태영 DM struct 추가
 2025-11-21 이승준 lost_item_list_search에서 "내가 쓴 게시물" & "나에게 지정된 게시물" 필터 추가
 2025-11-20 이승준 (load_lost_item_list, save_new_lost_item)
-2025-11-20 이승준 added lobby logic 
-2025-11-20 LostItem 및 LostItemList struct 작성, 필요 함수들 작성(lost_item_list_insert_new_item, lost_item_list_search 등 분실물 관련)
-2025-11-19 이승준 분실물 포스트하며 
+2025-11-20 이승준 로비 pagination 및 filter에 필요한 함수 작성(search)
+2025-11-20 LostItem 및 LostItemList struct 수정, 필요 함수들 작성(lost_item_list_insert_new_item, lost_item_list_search 등 분실물 관련)
+2025-11-19 이승준 분실물 포스트 사용되는 분실물 struct 작성
 */
 
 #include <stdio.h>
@@ -17,35 +17,33 @@ models.c: 분실물 struct 및 struct 관리 함수, DM 메시지 struct 및 관
 #include "../include/models.h"
 #include "../include/raylib.h"
 
+// 분실물 리스트 파일에서 불러오기
 void load_lost_item_list(LostItemList *list) {
     FILE *fptr = fopen("./data/lostitems.txt", "r");
     if (fptr == NULL) {
         printf("Failed to load lost_item_list\n");
         return;
     }
-    char read_title[MAX_TITLE_LEN];
-    char read_content[MAX_CONTENT_LEN];
-    int temp_read_deleted;
-    bool read_deleted;
-    char read_target_user[MAX_USERNAME_LEN];
-    char read_tags[8];
-    char read_writer[MAX_USERNAME_LEN];
-    bool tags[6] = {false, false, false, false, false, false};
+    char read_title[MAX_TITLE_LEN]; // 게시글 제목
+    char read_content[MAX_CONTENT_LEN]; // 게시글 내용
+    int temp_read_deleted; // 게시글 지워진지 여부
+    bool read_deleted; // 지워지지 여부 bool형으로 conversion
+    char read_target_user[MAX_USERNAME_LEN]; // target user 있는지 확인
+    char read_tags[8]; // 태그 존재 여부
+    char read_writer[MAX_USERNAME_LEN]; // 게시글 작성자
+    bool tags[6] = {false, false, false, false, false, false}; // 태그 읽은 것 기반으로 bool 배열로 변환
+
     while (fscanf(fptr, "%s %s %d %s %s %s", read_title, read_content, &temp_read_deleted, read_target_user, read_tags, read_writer) != EOF) {
         for (int i = 0; i < 6; i++) tags[i] = (bool)(read_tags[i] - '0');
         for (int i = 0; i < strlen(read_title); i++) {
-            if (read_title[i] == '_') read_title[i] = ' ';
+            if (read_title[i] == '_') read_title[i] = ' '; // 저장할 때 공백은 _로 변환해 저장
         }
         for (int i = 0; i < strlen(read_content); i++) {
-            if (read_content[i] == '_') read_content[i] = ' ';
+            if (read_content[i] == '_') read_content[i] = ' '; // 저장할 때 공백은 _로 변환해 저장
         }
         read_deleted = (bool)temp_read_deleted;
         char read_temp_user[1] = "";
         list->insert_lost_item(list, read_title, read_content, (strcmp(read_target_user, "00000") == 0 ? read_temp_user : read_target_user), read_writer, tags, read_deleted);
-    }
-
-    for (int i = 0; i < list->len; i++) {
-        LostItem *temp = list->list[i];
     }
 
     fclose(fptr);

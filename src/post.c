@@ -1,3 +1,9 @@
+/*
+post.c: 분실물 게시물 올릴 때 정보 입력하는 페이지
+2025-11-26 이승준 변수명 변경: 전역변수 앞에 g_ 접두사, 정적변수 앞에 s_ 접두사, camel case->snake case
+2025-11-20 이승준 post 관련 함수(blit하는 함수 및 valid한지 체크, 태그 로직 등)
+2025-11-19 이승준 post.c 파일 생성 및 기본적인 화면 분할
+*/
 #include <string.h>
 #include "../include/raylib.h"
 #include "../include/constants.h"
@@ -7,21 +13,21 @@
 #include "../include/post.h"
 
 
-char g_post_title[MAX_TITLE_LEN];
-char g_post_content[MAX_CONTENT_LEN];
-char g_post_target_user[MAX_USERNAME_LEN];
-char g_post_school_number[MAX_USERNAME_LEN];
+char g_post_title[MAX_TITLE_LEN]; // 사용자로부터 분실물 게시글 제목 입력받는 변수
+char g_post_content[MAX_CONTENT_LEN]; // 사용자로부터 분실물 게시글 내용 입력받는 변수
+char g_post_target_user[MAX_USERNAME_LEN]; // 사용자로부터 분실물 잃어버린 사람 입력받는 변수
+char g_post_school_number[MAX_USERNAME_LEN]; // 작성자 교번
 const char *g_post_error_msg[] = {
     "",
     "Invalid Title",
     "Invalid Content",
     "Invalid Target User",
-};
-int g_post_selected = 0;
-int g_post_error = 0;
-bool g_post_tags_selected[6] = {false, false, false, false, false, false};
+}; 
+int g_post_selected = 0; // 
+int g_post_error = 0; // 
+bool g_post_tags_selected[6] = {false, false, false, false, false, false}; // 각각의 태그 선택 여부
 
-
+// 게시물 작성하는 화면 구성
 void post_screen() {
     // error msg
     if (g_post_error) draw_text(g_post_error_msg[g_post_error], WIDTH - 50, 30, 40, TOP_RIGHT, RED);
@@ -38,7 +44,6 @@ void post_screen() {
     DrawTextBoxed(GetFontDefault(), g_post_content, text_box_area, 40, 1, true, BLACK);
 
     // target_user
-    // NewRectangle(50, 500, WIDTH - 100)
     draw_text("Target User (U)", 50, HEIGHT - 335, 40, TOP_LEFT, BLACK);
     draw_rectangle(50, HEIGHT - 280, WIDTH - 100, 50, TOP_LEFT, (g_post_selected == 3 ? RED : BLACK));
     draw_text(g_post_target_user, 55, HEIGHT - 255, 40, MIDDLE_LEFT, BLACK);
@@ -62,6 +67,7 @@ void post_screen() {
     draw_text("Post (P)", (3 * WIDTH / 2 - 25) / 2, (HEIGHT - 55), 40, MIDDLE_CENTER, BLACK);
 }
 
+// 게시 페이지 리셋: 게시글 생성했거나 뒤로가기를 누른 경우
 void post_reset() {
     memset(g_post_title, '\0', MAX_TITLE_LEN);
     memset(g_post_content, '\0', MAX_CONTENT_LEN);
@@ -71,6 +77,7 @@ void post_reset() {
     g_post_selected = 0;
 }
 
+// 게시 전 내용이 유효한지 확인하는 함수
 bool post_valid() {
     if (strlen(g_post_title) == 0) {
         g_post_error = 1;
