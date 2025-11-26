@@ -1,3 +1,16 @@
+/*
+models.c: 분실물 struct 및 struct 관리 함수, DM 메시지 struct 및 관리 함수
+2025-11-26 이승준 전역변수 이름(g_) rename
+2025-11-26 김현성 notif checked
+2025-11-26 안태영 DM sending
+2025-11-25 안태영 I made DM main screen
+2025-11-21 이승준 lost_item_list_search에서 "내가 쓴 게시물" & "나에게 지정된 게시물" 필터 추가
+2025-11-20 이승준 (load_lost_item_list, save_new_lost_item)
+2025-11-20 이승준 added lobby logic 
+2025-11-20 LostItem 및 LostItemList struct 작성, 필요 함수들 작성(lost_item_list_insert_new_item, lost_item_list_search 등 분실물 관련)
+2025-11-19 이승준 분실물 포스트하며 
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -178,7 +191,7 @@ int lost_item_list_length(int *ind) {
     return ret;
 }
 
-LostItemList *g_lost_items = create_lost_item_list();
+LostItemList *g_lost_items;
 
 /*---------------------채팅---------------------*/
 //채팅 리스트에 메세지 추가
@@ -364,4 +377,4 @@ int dm_list_length(int *ind) {
     return ret;
 }
 
-DMList *g_dm_messages = create_dm_list();
+DMList *g_dm_messages;

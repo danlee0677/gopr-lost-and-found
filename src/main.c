@@ -61,6 +61,9 @@ int main() {
     InitWindow(WIDTH, HEIGHT, "LOST AND FOUND");
     SetTargetFPS(60);
 
+    g_dm_messages = create_dm_list();
+    g_lost_items = create_lost_item_list();
+
     login_reset();     // scene=1
     register_reset();  // scene=2
     lobby_reset();     // scene=3

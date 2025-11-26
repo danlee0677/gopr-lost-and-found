@@ -1,5 +1,5 @@
 # Compiler
-CC = g++
+CC = gcc
 
 # Source and output
 SRC_DIR = src

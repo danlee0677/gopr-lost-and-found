@@ -44,6 +44,7 @@ const char *g_tag_names[6] = {"Electronics", "Clothings", "Bags", "Stationery", 
 const char *g_tag_numbers[6] = {"1", "2", "3", "4", "5", "6"};
 const char *g_filter_names[2] = {"A", "W"};
 
+// 로비 요소들 blit하는 용도
 void lobby_screen() {
     // Search bar
     draw_rectangle(50, 50, WIDTH / 2 + 200, 100, TOP_LEFT, (g_lobby_selected == 1 ? RED : BLACK));
@@ -122,6 +123,7 @@ void lobby_screen() {
 
 }
 
+// 로비 나갈때 초기화
 void lobby_reset() {
     if (g_lobby_search_result) {
         free(g_lobby_search_result);
@@ -138,6 +140,7 @@ void lobby_reset() {
     g_lobby_target_user_selected = false;
 }
 
+// 로비에서 분실물 리스트 동기화 필요할 때/필터 적용 시
 void lobby_sync_lost_item_list() {
     g_lobby_page = 1;
     g_lobby_search_result = g_lost_items->search_lost_item(g_lost_items, g_lobby_search, g_lobby_tags_selected, g_lobby_school_number, g_lobby_filters);
