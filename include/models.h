@@ -11,7 +11,7 @@ typedef enum {
     STATIONERY, // 학용품
     PERSONAL, // 개인물품: 지갑, 신분증 등
     SPECIAL, // 기타 분류
-} TagEnum;
+} TagEnum; // 태그 담는 열거형
 
 typedef struct {
     int _id;                      // 게시글 고유 ID
@@ -21,7 +21,7 @@ typedef struct {
     char target_user[MAX_USERNAME_LEN];             // 분실물 주인(없으면 -1)
     char writer[MAX_USERNAME_LEN]; // 게시자
     bool tags[6];             // 태그
-} LostItem;
+} LostItem; // 분실물 게시글 1개
 
 typedef struct LostItemList_t {
     void (*insert_lost_item)(struct LostItemList_t* self, char title[], char content[], char target_user[], char writer[], bool tags[], bool deleted); // 분실물 삽입
@@ -29,7 +29,7 @@ typedef struct LostItemList_t {
     int* (*search_lost_item)(struct LostItemList_t* self, char keywords[], bool tags[], char _id[], bool filters[]);     // 태그 검색
     LostItem **list;        // 분실물 배열
     int len, max_len;       // 현재 길이, 최대 길이
-} LostItemList;
+} LostItemList; // 분실물 게시글의 리스트
 
 // 채팅 메시지 구조체: 메시지 내용 + 발신자 ID
 typedef struct {
@@ -38,7 +38,7 @@ typedef struct {
     char sender[50];             // 발신자 ID
     char receiver[50];
     int id;
-} DMMessage;
+} DMMessage; 
 
 // 채팅 메세지 리스트 구조체
 typedef struct DMList_t {
@@ -53,15 +53,15 @@ typedef struct DMList_t {
 extern LostItemList *g_lost_items;
 extern DMList *dmList; 
 
-void load_lost_item_list(LostItemList *list);
-void save_new_lost_item(LostItem *item);
-int lost_item_list_length(int *ind);
+void load_lost_item_list(LostItemList *list); // 파일에서 읽어오기
+void save_new_lost_item(LostItem *item); // 파일에서 저장하기
+int lost_item_list_length(int *ind); // search result 길이 구하기
 
-void load_dm_list(DMList *dmList);
-void save_new_dm(DMMessage *item);
-int dm_list_length(int *ind);
+void load_dm_list(DMList *dmList); // dm list 파일 불러오기
+void save_new_dm(DMMessage *item); // 새 dm 저장
+int dm_list_length(int *ind); // dm 길이 저장
 
-DMList *create_dm_list();
-LostItemList *create_lost_item_list();
+DMList *create_dm_list(); // DM 담는 list 초기화 및 생성
+LostItemList *create_lost_item_list(); // 분실물 게시글 담는 list 초기화 및 생성
 
 #endif
