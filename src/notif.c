@@ -8,20 +8,23 @@
 #include "../include/notif.h"
 
 #define MAX_LINES 1024
+#define FILE_NAME_MAX_LEN 100
 #define LINES_PER_PAGE 5
+#define MAX_TITLE_LEN 250
+#define MAX_CONTENT_LEN 1000
 
 extern char schoolNumber[50];
 
 int notif_sellected = 1;
-char notif_lines[100][256];
+char notif_lines[MAX_LINES][MAX_CONTENT_LEN];
 int notif_count = 0;
 int notif_total_page = 1;
 int current_page = 1;
 int fromNotif = 0;
-const char filename[30] = "./data/notif.txt";
-char id[5][3][20];
-char title[5][250];
-char content[5][1000];
+const char filename[FILE_NAME_MAX_LEN] = "./data/notif.txt";
+char id[LINES_PER_PAGE][3][20];
+char title[LINES_PER_PAGE][MAX_TITLE_LEN];
+char content[LINES_PER_PAGE][MAX_LINES];
 bool notifToDM = false;
 
 void NotifScreen() {
@@ -41,7 +44,7 @@ void NotifScreen() {
         return;
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < LINES_PER_PAGE; i++) {
         int idx = (current_page - 1) * 5 + i;
         if (idx >= notif_count) break;
 
@@ -56,13 +59,13 @@ void NotifScreen() {
 
 void readNotifFile() {
     notif_count = 0;
-    FILE *f = fopen("./data/notif.txt", "r");
+    FILE *nf = fopen("./data/notif.txt", "r");
 
-    if (f == NULL) {
+    if (nf == NULL) {
         return;
     }
 
-    while (fgets(notif_lines[notif_count], sizeof(notif_lines[notif_count]), f) != NULL) {
+    while (fgets(notif_lines[notif_count], sizeof(notif_lines[notif_count]), nf) != NULL) {
         size_t len = strlen(notif_lines[notif_count]);
         if (len > 0 && (notif_lines[notif_count][len - 1] == '\n' || notif_lines[notif_count][len - 1] == '\r')) {
             notif_lines[notif_count][len - 1] = '\0';
@@ -74,32 +77,33 @@ void readNotifFile() {
         if (strcmp(id[0][1], schoolNumber) == 0)
             notif_count++;
     }
+    fclose(nf);
 
-    for (int i = 0; i < 5; i++) {
-        int idx = (current_page - 1) * 5 + i;
+    FILE *df;
+    for (int i = 0; i < LINES_PER_PAGE; i++) {
+        int idx = (current_page - 1) * LINES_PER_PAGE + i;
         if (idx >= notif_count) break;
 
         sscanf(notif_lines[idx], "%s %s %s", id[i][0], id[i][1], id[i][2]);
         printf("id[%d]: %s %s %s\n", i, id[i][0], id[i][1], id[i][2]);
 
-        f = fopen(TextFormat("./data/dm/%s %s %s.txt", id[i][0], id[i][1], id[i][2]), "r");
-        fgets(title[i], sizeof(title[i]), f);
+        df = fopen(TextFormat("./data/dm/%s %s %s.txt", id[i][0], id[i][1], id[i][2]), "r");
+        fgets(title[i], sizeof(title[i]), df);
         title[i][strcspn(title[i], "\r\n")] = '\0';
-        fgets(content[i], sizeof(content[i]), f);
+        fgets(content[i], sizeof(content[i]), df);
         content[i][strcspn(content[i], "\r\n")] = '\0';
     }
 
-    fclose(f);
+    fclose(df);
 
     if (notif_count > 0) {
-        notif_total_page = (notif_count + 4) / 5;
+        notif_total_page = (notif_count + (LINES_PER_PAGE - 1)) / LINES_PER_PAGE;
     } else {
         notif_total_page = 1;
     }
 }
 
 void clearNotif() {
-    remove(filename);
     notif_count = 0;
     notif_total_page = 1;
     current_page = 1;

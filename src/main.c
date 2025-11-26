@@ -260,9 +260,7 @@ int main() {
                             scene = 5;
                             LobbyReset();
                         }
-                    }
-
-                    else if (IsKeyPressed(KEY_A)) {
+                    } else if (IsKeyPressed(KEY_A)) {
                         lobbyFilters[0] = !lobbyFilters[0];
                         LobbyLostItemListSync();
                     } else if (IsKeyPressed(KEY_W)) {
@@ -483,11 +481,11 @@ int main() {
 
             case 9:  // notifications
                 extern int notif_sellected;
-                extern char notif_lines[100][256];
+                extern char notif_lines[MAX_LINES][MAX_CONTENT_LEN];
                 extern int notif_count;
                 extern int notif_total_page;
                 extern int current_page;
-                extern char id[5][3][20];
+                extern char id[LINES_PER_PAGE][3][20];
                 extern int DMtypes;
                 extern int fromNotif;
 
