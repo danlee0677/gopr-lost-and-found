@@ -1,0 +1,37 @@
+8262295 danlee0677 2025-11-26 migration to gcc, global runtime initialization moved to main()
+cd2c1f0 danlee0677 2025-11-26 added comments to lobby
+3af48e4 danlee0677 2025-11-26 add main.c comments
+b5bc5c4 danlee0677 2025-11-26 rename global variables
+ac2936e danlee0677 2025-11-26 restructure macros
+6e7f0b0 danlee0677 2025-11-26 rename variable
+8b308b7 danlee0677 2025-11-26 merged
+24b603b danlee0677 2025-11-26 rename variable
+26ce393 khs0516 2025-11-26 notif fix
+e32a170 khs0516 2025-11-26 notif checked
+9044fd4 gdquail 2025-11-26 Final/
+2aa83c5 gdquail 2025-11-26 DM sending
+1e0abbe khs0516 2025-11-25 merged?
+3199ad4 khs0516 2025-11-25 merged version
+3fbd1b3 gdquail 2025-11-25 dmviewer made
+ca846ee khs0516 2025-11-25 dm and notif
+535d7c6 gdquail 2025-11-25 I made DM main screen
+c4aad92 danlee0677 2025-11-21 finish view.c, fix title & add filters in lobby
+0a34658 gdquail 2025-11-20 Formatting
+25588ef danlee0677 2025-11-20 fix merge confilct
+2dbcd9f danlee0677 2025-11-20 added postview
+858e502 gdquail 2025-11-20 temporary
+671732a danlee0677 2025-11-20 added template
+f998903 danlee0677 2025-11-20 pagination in lobby
+35a6a6b danlee0677 2025-11-20 added lobby logic
+d9281bf danlee0677 2025-11-20 finished post
+7a689e1 danlee0677 2025-11-19 added post screen
+07b77dd chuzzy 2025-11-19 asdf2
+6b8e6d0 chuzzy 2025-11-19 lobby test 2
+182f81b chuzzy 2025-11-13 lobby test 1
+4c60eed chuzzy 2025-11-10 login register test working
+660aa4f chuzzy 2025-11-09 login register test 1
+909eee4 chuzzy 2025-11-09 login screen test 2
+489efc7 chuzzy 2025-11-09 main menu test 1
+4d2a66d chuzzy 2025-11-09 login screen test
+af6e91e chuzzy 2025-11-05 folders structure and raylib test
+79ff32c danlee0677 2025-11-05 file structure
