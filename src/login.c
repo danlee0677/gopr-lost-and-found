@@ -40,11 +40,11 @@ void login_screen() {
     }
 }
 
-static bool isNumber(char c) {
+static bool is_number(char c) {
     return c >= '0' && c <= '9';
 }
 
-static bool isLetter(char c) {
+static bool is_letter(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
@@ -57,7 +57,7 @@ bool login_check() {
 
     int flag = 0;
     for (int i = 0; i < strlen(login_username); i++) {
-        if (!isNumber(login_username[i])) flag = 1;
+        if (!is_number(login_username[i])) flag = 1;
     }
     if (flag) {
         login_valid = 2;
@@ -72,7 +72,7 @@ bool login_check() {
     //password must be consisted of numbers and letters
     flag = 0;
     for (int i = 0; i < strlen(login_password); i++) {
-        if (!isNumber(login_password[i]) && !isLetter(login_password[i])) flag = 1;
+        if (!is_number(login_password[i]) && !is_letter(login_password[i])) flag = 1;
     }
     if (flag) {
         login_valid = 4;

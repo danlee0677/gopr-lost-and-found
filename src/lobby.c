@@ -59,7 +59,7 @@ void lobby_screen() {
     draw_rectangle(WIDTH / 2 + 300, HEIGHT - 210, 320, 110, TOP_LEFT, BLACK);
 
     // top right 
-    draw_text(TextFormat("Hello, %s!", lobby_school_number), WIDTH - 50, 75, 50, TOP_RIGHT, BLACK);
+    draw_text(TextFormat("Hello, %s!", lobby_school_number), WIDTH - 50, 40, 50, TOP_RIGHT, BLACK);
 
     // Search Result Display
     draw_rectangle(50, 200, WIDTH / 2 + 200, HEIGHT - 300, TOP_LEFT, BLACK);
@@ -78,8 +78,8 @@ void lobby_screen() {
     }
 
     // Notification
-    NewRectangle(WIDTH - 50, 100, 320, 50, TOP_RIGHT, BLACK);
-    NewText("Notifications (N)", WIDTH - 215, 125, 37, MIDDLE_CENTER, BLACK);
+    draw_rectangle(WIDTH - 50, 100, 320, 50, TOP_RIGHT, BLACK);
+    draw_text("Notifications (N)", WIDTH - 215, 125, 37, MIDDLE_CENTER, BLACK);
 
     // Post    
     draw_rectangle(WIDTH - 50, 200, 250, 120, TOP_RIGHT, BLACK);

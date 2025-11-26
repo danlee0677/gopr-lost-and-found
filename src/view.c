@@ -9,29 +9,29 @@
 
 extern LostItemList *lost_items;
 int view_item_id;
-LostItem *viewItem;
-char viewSchoolNumber[MAX_USERNAME_LEN];
-bool viewSync = false;
-int tagCount;
-char totalTag[300];
+LostItem *view_item;
+char view_school_number[MAX_USERNAME_LEN];
+bool view_sync = false;
+int tag_count;
+char total_tag[300];
 
-extern char *tagNames[6];
+extern char *tag_names[6];
 
-void ViewScreen() {
+void view_screen() {
     // title
-    draw_text(viewItem->title, WIDTH / 2, 30, 70, TOP_CENTER, BLACK);
+    draw_text(view_item->title, WIDTH / 2, 30, 70, TOP_CENTER, BLACK);
 
     // writer
-    draw_text(TextFormat("Writer: %s", viewItem->writer), WIDTH - 50, 110, 45, TOP_RIGHT, BLACK);
+    draw_text(TextFormat("Writer: %s", view_item->writer), WIDTH - 50, 110, 45, TOP_RIGHT, BLACK);
 
     // content
-    DrawTextBoxed(GetFontDefault(), viewItem->content, (Rectangle){.x = 50, .y = 240, .width = WIDTH - 100, .height = HEIGHT - 240 - 200}, 40, 1, true, BLACK);
+    DrawTextBoxed(GetFontDefault(), view_item->content, (Rectangle){.x = 50, .y = 240, .width = WIDTH - 100, .height = HEIGHT - 240 - 200}, 40, 1, true, BLACK);
     
     // NewText(TextFormat("Tag: "));
-    draw_text(TextFormat("Target User: %s", (viewItem->target_user ? viewItem->target_user : "None")), 50, 160, 45, TOP_LEFT, BLACK);
+    draw_text(TextFormat("Target User: %s", (view_item->target_user ? view_item->target_user : "None")), 50, 160, 45, TOP_LEFT, BLACK);
     
     // Tags
-    draw_text(TextFormat("Tags: %s", (strlen(totalTag) == 0 ? "None" : totalTag)), 50, HEIGHT - 180, 50, TOP_LEFT, BLACK);
+    draw_text(TextFormat("Tags: %s", (strlen(total_tag) == 0 ? "None" : total_tag)), 50, HEIGHT - 180, 50, TOP_LEFT, BLACK);
 
     // go back to lobby
     draw_rectangle(50, HEIGHT - 100, WIDTH / 2 - 75, 60, TOP_LEFT, BLACK);
@@ -39,31 +39,31 @@ void ViewScreen() {
     
     // Go to dm or Mark as returned(delete)
     draw_rectangle(WIDTH / 2 + 25, HEIGHT - 100, WIDTH / 2 - 75, 60, TOP_LEFT, BLACK);
-    if (strcmp(viewItem->writer, viewSchoolNumber) == 0)
+    if (strcmp(view_item->writer, view_school_number) == 0)
         draw_text("Mark as Deleted (M)", 3 * WIDTH / 4 - 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
     else 
-        draw_text(TextFormat("DM to %s (D)", viewItem->writer), 3 * WIDTH / 4 - 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
+        draw_text(TextFormat("DM to %s (D)", view_item->writer), 3 * WIDTH / 4 - 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
 }
 
-void ViewReset() {
+void view_reset() {
     view_item_id = -1;
-    viewSync = false;
-    tagCount = 0;
-    totalTag[0] = '\0';
+    view_sync = false;
+    tag_count = 0;
+    total_tag[0] = '\0';
 }
 
-void ViewSynchronize() {
-    tagCount = 0;
-    totalTag[0] = '\0';
+void view_synchronize() {
+    tag_count = 0;
+    total_tag[0] = '\0';
     for (int i = 0; i < 6; i++) {
-        if (viewItem->tags[i]) {
-            if (tagCount == 0) {
-                strcat(totalTag, tagNames[i]);
+        if (view_item->tags[i]) {
+            if (tag_count == 0) {
+                strcat(total_tag, tag_names[i]);
             } else {
-                strcat(totalTag, ", ");
-                strcat(totalTag, tagNames[i]);
+                strcat(total_tag, ", ");
+                strcat(total_tag, tag_names[i]);
             }
-            tagCount++;
+            tag_count++;
         }
     }
 }

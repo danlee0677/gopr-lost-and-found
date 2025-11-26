@@ -2,7 +2,7 @@
 #define DM_H
 
 void DMscreen();
-void DMreset();
+void DM_reset();
 void OpenDM();
 void DMListSync();
 

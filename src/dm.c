@@ -56,7 +56,7 @@ void DMscreen() {
     draw_text("Back (B)", WIDTH - 175, 580, 50, MIDDLE_CENTER, BLACK);
 }
 
-void DMreset() {
+void DM_reset() {
     dm_selected = 0;
     DMs = 0;
     myDMs = 0;

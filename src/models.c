@@ -10,25 +10,25 @@ void load_lost_item_list(LostItemList *list) {
         printf("Failed to load lost_item_list\n");
         return;
     }
-    char readTitle[MAX_TITLE_LEN];
-    char readContent[MAX_CONTENT_LEN];
-    int tempReadDeleted;
-    bool readDeleted;
-    char readTargetUser[MAX_USERNAME_LEN];
-    char readTags[8];
-    char readWriter[MAX_USERNAME_LEN];
+    char read_title[MAX_TITLE_LEN];
+    char read_content[MAX_CONTENT_LEN];
+    int temp_read_deleted;
+    bool read_deleted;
+    char read_target_user[MAX_USERNAME_LEN];
+    char read_tags[8];
+    char read_writer[MAX_USERNAME_LEN];
     bool tags[6] = {false, false, false, false, false, false};
-    while (fscanf(fptr, "%s %s %d %s %s %s", readTitle, readContent, &tempReadDeleted, readTargetUser, readTags, readWriter) != EOF) {
-        for (int i = 0; i < 6; i++) tags[i] = (bool)(readTags[i] - '0');
-        for (int i = 0; i < strlen(readTitle); i++) {
-            if (readTitle[i] == '_') readTitle[i] = ' ';
+    while (fscanf(fptr, "%s %s %d %s %s %s", read_title, read_content, &temp_read_deleted, read_target_user, read_tags, read_writer) != EOF) {
+        for (int i = 0; i < 6; i++) tags[i] = (bool)(read_tags[i] - '0');
+        for (int i = 0; i < strlen(read_title); i++) {
+            if (read_title[i] == '_') read_title[i] = ' ';
         }
-        for (int i = 0; i < strlen(readContent); i++) {
-            if (readContent[i] == '_') readContent[i] = ' ';
+        for (int i = 0; i < strlen(read_content); i++) {
+            if (read_content[i] == '_') read_content[i] = ' ';
         }
-        readDeleted = (bool)tempReadDeleted;
-        char readTempUser[1] = "";
-        list->insert_lost_item(list, readTitle, readContent, (strcmp(readTargetUser, "00000") == 0 ? readTempUser : readTargetUser), readWriter, tags, readDeleted);
+        read_deleted = (bool)temp_read_deleted;
+        char read_temp_user[1] = "";
+        list->insert_lost_item(list, read_title, read_content, (strcmp(read_target_user, "00000") == 0 ? read_temp_user : read_target_user), read_writer, tags, read_deleted);
     }
 
     for (int i = 0; i < list->len; i++) {
@@ -44,21 +44,21 @@ void save_new_lost_item(LostItem *item) {
         printf("Failed to save new lost item\n");
         return;
     }
-    char saveTitle[MAX_TITLE_LEN];
-    char saveContent[MAX_CONTENT_LEN];
-    strcpy(saveTitle, item->title);
-    strcpy(saveContent, item->content);
+    char save_title[MAX_TITLE_LEN];
+    char save_content[MAX_CONTENT_LEN];
+    strcpy(save_title, item->title);
+    strcpy(save_content, item->content);
     for (int i = 0; i < strlen(item->title); i++) {
-        if (saveTitle[i] == ' ') saveTitle[i] = '_';
+        if (save_title[i] == ' ') save_title[i] = '_';
     }
     for (int i = 0; i < strlen(item->content); i++) {
-        if (saveContent[i] == ' ') saveContent[i] = '_';
+        if (save_content[i] == ' ') save_content[i] = '_';
     }
-    char saveTag[7];
-    for (int i = 0; i < 6; i++) saveTag[i] = item->tags[i] + '0';
-    saveTag[6] = '\0';
-    char saveUserTemp[6] = "00000"; // to prevent missing target user when loading & saving
-    fprintf(fptr, "%s %s %d %s %s %s\n", saveTitle, saveContent, (int)item->deleted, (strlen(item->target_user) == 0 ? saveUserTemp : item->target_user), saveTag, item->writer);
+    char save_tag[7];
+    for (int i = 0; i < 6; i++) save_tag[i] = item->tags[i] + '0';
+    save_tag[6] = '\0';
+    char save_user_temp[6] = "00000"; // to prevent missing target user when loading & saving
+    fprintf(fptr, "%s %s %d %s %s %s\n", save_title, save_content, (int)item->deleted, (strlen(item->target_user) == 0 ? save_user_temp : item->target_user), save_tag, item->writer);
 
     fclose(fptr);
 }
@@ -198,8 +198,8 @@ void load_dm_list(DMList *list) {
     printf("DM file count = %d\n", files.count);
 
     for (int i = 0; i < files.count; i++) {
-        const char *fullPath = files.paths[i];
-        const char *filename = GetFileName(fullPath);
+        const char *full_path = files.paths[i];
+        const char *filename = GetFileName(full_path);
 
         // 파일 이름에서 sender / receiver / id 파싱
         char sender[50];
@@ -214,9 +214,9 @@ void load_dm_list(DMList *list) {
         }
 
         // 파일 열기
-        FILE *fp = fopen(fullPath, "r");
+        FILE *fp = fopen(full_path, "r");
         if (!fp) {
-            fprintf(stderr, "failed to open %s\n", fullPath);
+            fprintf(stderr, "failed to open %s\n", full_path);
             continue;
         }
 

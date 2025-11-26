@@ -41,11 +41,11 @@ int main() {
     SetTargetFPS(60);
 
     login_reset();     // scene=1
-    RegisterReset();  // scene=2
+    register_reset();  // scene=2
     lobby_reset();     // scene=3
-    PostReset();      // scene=4
-    ViewReset();      // scene=5
-    notifReset();    // scene=8
+    post_reset();      // scene=4
+    view_reset();      // scene=5
+    notif_reset();    // scene=8
 
     // todo: remove this when finish
     // strcpy(schoolNumber, "24101");
@@ -69,16 +69,16 @@ int main() {
 
             case 1:  // login
                 extern int login_selected;
-                extern bool loginValid;
+                extern bool login_valid;
                 extern char login_username[50];
                 extern char login_password[50];
 
                 login_screen();
 
-                DrawText(TextFormat("loginSelected: %d", login_selected), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("loginValid: %d", loginValid), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("loginUsername: %s", login_username), 20, HEIGHT - 200, 30, BLACK);
-                DrawText(TextFormat("loginPassword: %s", login_password), 20, HEIGHT - 240, 30, BLACK);
+                // DrawText(TextFormat("loginSelected: %d", login_selected), 20, HEIGHT - 120, 30, BLACK);
+                // DrawText(TextFormat("loginValid: %d", login_valid), 20, HEIGHT - 160, 30, BLACK);
+                // DrawText(TextFormat("loginUsername: %s", login_username), 20, HEIGHT - 200, 30, BLACK);
+                // DrawText(TextFormat("loginPassword: %s", login_password), 20, HEIGHT - 240, 30, BLACK);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
@@ -104,66 +104,66 @@ int main() {
                         login_selected = 2;
                     } else if (IsKeyPressed(KEY_L)) {
                         if (login_check()) {
-                            loginValid = 0;
+                            login_valid = 0;
                             strcpy(school_number, login_username);
                             scene = 3;
                         }
                         login_reset();
                     } else if (IsKeyPressed(KEY_B)) {
                         login_reset();
-                        loginValid = 0;
+                        login_valid = 0;
                         scene = 0;
                     }
                 }
                 break;
 
             case 2:  // register
-                extern int registerSelected;
-                extern bool registerValid;
-                extern char registerUsername[50];
-                extern char registerPassword[50];
-                extern char registerPassword2[50];
+                extern int register_selected;
+                extern bool register_valid;
+                extern char register_username[50];
+                extern char register_password[50];
+                extern char register_password2[50];
 
-                RegisterScreen();
+                register_screen();
 
-                DrawText(TextFormat("registerSelected: %d", registerSelected), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("registerValid: %d", registerValid), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("registerUsername: %s", registerUsername), 20, HEIGHT - 200, 30, BLACK);
-                DrawText(TextFormat("registerPassword: %s", registerPassword), 20, HEIGHT - 240, 30, BLACK);
-                DrawText(TextFormat("registerPassword2: %s", registerPassword2), 20, HEIGHT - 280, 30, BLACK);
+                // DrawText(TextFormat("registerSelected: %d", registerSelected), 20, HEIGHT - 120, 30, BLACK);
+                // DrawText(TextFormat("registerValid: %d", registerValid), 20, HEIGHT - 160, 30, BLACK);
+                // DrawText(TextFormat("registerUsername: %s", registerUsername), 20, HEIGHT - 200, 30, BLACK);
+                // DrawText(TextFormat("registerPassword: %s", registerPassword), 20, HEIGHT - 240, 30, BLACK);
+                // DrawText(TextFormat("registerPassword2: %s", registerPassword2), 20, HEIGHT - 280, 30, BLACK);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
                         typing = false;
-                        registerSelected = 0;
+                        register_selected = 0;
                     } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (registerSelected == 1) registerUsername[strlen(registerUsername) - 1] = '\0';
-                        else if (registerSelected == 2) registerPassword[strlen(registerPassword) - 1] = '\0';
-                        else if (registerSelected == 3) registerPassword2[strlen(registerPassword2) - 1] = '\0';
+                        if (register_selected == 1) register_username[strlen(register_username) - 1] = '\0';
+                        else if (register_selected == 2) register_password[strlen(register_password) - 1] = '\0';
+                        else if (register_selected == 3) register_password2[strlen(register_password2) - 1] = '\0';
                     } else {
-                        if (registerSelected == 1) registerUsername[strlen(registerUsername)] = GetCharPressed();
-                        else if (registerSelected == 2) registerPassword[strlen(registerPassword)] = GetCharPressed();
-                        else if (registerSelected == 3) registerPassword2[strlen(registerPassword2)] = GetCharPressed();
+                        if (register_selected == 1) register_username[strlen(register_username)] = GetCharPressed();
+                        else if (register_selected == 2) register_password[strlen(register_password)] = GetCharPressed();
+                        else if (register_selected == 3) register_password2[strlen(register_password2)] = GetCharPressed();
                     }
                 } else {
                     if (IsKeyPressed(KEY_U)) {
                         typing = true;
-                        registerSelected = 1;
+                        register_selected = 1;
                     } else if (IsKeyPressed(KEY_P)) {
                         typing = true;
-                        registerSelected = 2;
+                        register_selected = 2;
                     } else if (IsKeyPressed(KEY_C)) {
                         typing = true;
-                        registerSelected = 3;
+                        register_selected = 3;
                     } else if (IsKeyPressed(KEY_R)) {
-                        if (RegisterCheck()) {
-                            registerValid = 0;
+                        if (register_check()) {
+                            register_valid = 0;
                             scene = 0;
                         }
-                        RegisterReset();
+                        register_reset();
                     } else if (IsKeyPressed(KEY_B)) {
-                        RegisterReset();
-                        registerValid = 0;
+                        register_reset();
+                        register_valid = 0;
                         scene = 0;
                     }
                 }
@@ -192,10 +192,10 @@ int main() {
 
                 lobby_screen();
 
-                DrawText(TextFormat("schoolNumber: %s", lobby_school_number), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("search: %s", lobby_search), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("selected: %d", lobby_selected), 20, HEIGHT - 200, 30, BLACK);
-                DrawText(TextFormat("page: %d", lobby_page), 20, HEIGHT - 240, 30, BLACK);
+                // DrawText(TextFormat("schoolNumber: %s", lobby_school_number), 20, HEIGHT - 120, 30, BLACK);
+                // DrawText(TextFormat("search: %s", lobby_search), 20, HEIGHT - 160, 30, BLACK);
+                // DrawText(TextFormat("selected: %d", lobby_selected), 20, HEIGHT - 200, 30, BLACK);
+                // DrawText(TextFormat("page: %d", lobby_page), 20, HEIGHT - 240, 30, BLACK);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
@@ -281,110 +281,110 @@ int main() {
                         lobby_reset();
                     } else if (IsKeyPressed(KEY_D)) {
                         scene = 6;
-                        DMreset();
+                        DM_reset();
                         lobby_reset();
                     } else if (IsKeyPressed(KEY_L)) {
                         scene = 0;
                         lobby_reset();
                     } else if (IsKeyPressed(KEY_N)) {
                         scene = 9;
-                        notifReset();
+                        notif_reset();
                         lobby_reset();
                     }
                 }
                 break;
 
             case 4:  // post
-                extern int postSelected;
-                extern bool postTagsSelected[6];
-                extern char postTitle[MAX_TITLE_LEN];
-                extern char postContent[MAX_CONTENT_LEN];
-                extern char postTargetUser[MAX_USERNAME_LEN];
-                extern char postSchoolNumber[MAX_USERNAME_LEN];
+                extern int post_selected;
+                extern bool post_tags_selected[6];
+                extern char post_title[MAX_TITLE_LEN];
+                extern char post_content[MAX_CONTENT_LEN];
+                extern char post_target_user[MAX_USERNAME_LEN];
+                extern char post_school_number[MAX_USERNAME_LEN];
 
-                PostScreen();
-                strcpy(postSchoolNumber, school_number);
+                post_screen();
+                strcpy(post_school_number, school_number);
 
                 if (typing) {
                     if (IsKeyPressed(KEY_ENTER)) {
                         typing = false;
-                        postSelected = 0;
+                        post_selected = 0;
                     } else if (IsKeyPressed(KEY_BACKSPACE)) {
-                        if (postSelected == 1 && strlen(postTitle) > 0) postTitle[strlen(postTitle) - 1] = '\0';
-                        else if (postSelected == 2 && strlen(postContent) > 0) postContent[strlen(postContent) - 1] = '\0';
-                        else if (postSelected == 3 && strlen(postTargetUser) > 0) postTargetUser[strlen(postTargetUser) - 1] = '\0';
+                        if (post_selected == 1 && strlen(post_title) > 0) post_title[strlen(post_title) - 1] = '\0';
+                        else if (post_selected == 2 && strlen(post_content) > 0) post_content[strlen(post_content) - 1] = '\0';
+                        else if (post_selected == 3 && strlen(post_target_user) > 0) post_target_user[strlen(post_target_user) - 1] = '\0';
                     } else {
                         // todo: word count limit
-                        if (postSelected == 1 && strlen(postTitle) < MAX_TITLE_LEN - 1)
-                            postTitle[strlen(postTitle)] = GetCharPressed();
-                        else if (postSelected == 2 && strlen(postContent) < MAX_CONTENT_LEN - 1)
-                            postContent[strlen(postContent)] = GetCharPressed();
-                        else if (postSelected == 3 && strlen(postTargetUser) < MAX_USERNAME_LEN - 1)
-                            postTargetUser[strlen(postTargetUser)] = GetCharPressed();
+                        if (post_selected == 1 && strlen(post_title) < MAX_TITLE_LEN - 1)
+                            post_title[strlen(post_title)] = GetCharPressed();
+                        else if (post_selected == 2 && strlen(post_content) < MAX_CONTENT_LEN - 1)
+                            post_content[strlen(post_content)] = GetCharPressed();
+                        else if (post_selected == 3 && strlen(post_target_user) < MAX_USERNAME_LEN - 1)
+                            post_target_user[strlen(post_target_user)] = GetCharPressed();
                     }
                 } else {
                     if (IsKeyPressed(KEY_T)) {
                         typing = true;
-                        postSelected = 1;
+                        post_selected = 1;
                     } else if (IsKeyPressed(KEY_C)) {
                         typing = true;
-                        postSelected = 2;
+                        post_selected = 2;
                     } else if (IsKeyPressed(KEY_U)) {
                         typing = true;
-                        postSelected = 3;
+                        post_selected = 3;
                     } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
-                        postTagsSelected[0] = !postTagsSelected[0];
+                        post_tags_selected[0] = !post_tags_selected[0];
                     } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
-                        postTagsSelected[1] = !postTagsSelected[1];
+                        post_tags_selected[1] = !post_tags_selected[1];
                     } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
-                        postTagsSelected[2] = !postTagsSelected[2];
+                        post_tags_selected[2] = !post_tags_selected[2];
                     } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
-                        postTagsSelected[3] = !postTagsSelected[3];
+                        post_tags_selected[3] = !post_tags_selected[3];
                     } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
-                        postTagsSelected[4] = !postTagsSelected[4];
+                        post_tags_selected[4] = !post_tags_selected[4];
                     } else if (IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6)) {
-                        postTagsSelected[5] = !postTagsSelected[5];
+                        post_tags_selected[5] = !post_tags_selected[5];
                     } else if (IsKeyPressed(KEY_P)) {
-                        if (PostValid()) {
-                            lost_items->insert_lost_item(lost_items, postTitle, postContent, postTargetUser, postSchoolNumber, postTagsSelected, false);
+                        if (post_valid()) {
+                            lost_items->insert_lost_item(lost_items, post_title, post_content, post_target_user, post_school_number, post_tags_selected, false);
                             save_new_lost_item(lost_items->list[lost_items->len - 1]);
-                            PostReset();
+                            post_reset();
                             scene = 3;
                         }
                     } else if (IsKeyPressed(KEY_B)) {
-                        PostReset();
+                        post_reset();
                         scene = 3;
                     }
                 }
                 break;
 
             case 5:  // view
-                extern LostItem* viewItem;
-                extern char viewSchoolNumber[MAX_USERNAME_LEN];
-                extern bool viewSync;
-                viewItem = lost_items->list[view_item_id];
+                extern LostItem* view_item;
+                extern char view_school_number[MAX_USERNAME_LEN];
+                extern bool view_sync;
+                view_item = lost_items->list[view_item_id];
 
 
-                strcpy(viewSchoolNumber, school_number);
+                strcpy(view_school_number, school_number);
 
-                if (!viewSync) {
-                    ViewSynchronize();
-                    viewSync = true;
+                if (!view_sync) {
+                    view_synchronize();
+                    view_sync = true;
                 }
 
-                ViewScreen();
+                view_screen();
 
                 if (IsKeyPressed(KEY_B)) {
                     scene = 3;
-                    ViewReset();
-                } else if (IsKeyPressed(KEY_D) && strcmp(viewItem->writer, school_number) != 0) {
+                    view_reset();
+                } else if (IsKeyPressed(KEY_D) && strcmp(view_item->writer, school_number) != 0) {
                     // todo: directly to DM
-                    strcpy(DMsend_receiver, viewItem->writer);
+                    strcpy(DMsend_receiver, view_item->writer);
                     scene = 8;
-                } else if (IsKeyPressed(KEY_M) && strcmp(viewItem->writer, school_number) == 0) {
+                } else if (IsKeyPressed(KEY_M) && strcmp(view_item->writer, school_number) == 0) {
                     // mark as deleted
                     lost_items->delete_lost_item(lost_items, view_item_id);
-                    ViewReset();
+                    view_reset();
                     scene = 3;
                 }
                 break;
@@ -416,7 +416,7 @@ int main() {
                         DM_types = 2;
                         DMListSync();
                     } else if (IsKeyPressed(KEY_B)) {
-                        DMreset();
+                        DM_reset();
                         scene = 3;
                     }
 
@@ -428,43 +428,43 @@ int main() {
                         if ((DM_page - 1) * 5 < dm_search_result_length) {
                             viewDM_id = dm_search_result[(DM_page - 1) * 7];
                             scene = 7;
-                            DMreset();
+                            DM_reset();
                         }
                     } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
                         if ((DM_page - 1) * 7 + 1 < dm_search_result_length) {
                             viewDM_id = dm_search_result[(DM_page - 1) * 7 + 1];
                             scene = 7;
-                            DMreset();
+                            DM_reset();
                         }
                     } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
                         if ((DM_page - 1) * 7 + 2 < dm_search_result_length) {
                             viewDM_id = dm_search_result[(DM_page - 1) * 7 + 2];
                             scene = 7;
-                            DMreset();
+                            DM_reset();
                         }
                     } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
                         if ((DM_page - 1) * 7 + 3 < dm_search_result_length) {
                             viewDM_id = dm_search_result[(DM_page - 1) * 7 + 3];
                             scene = 7;
-                            DMreset();
+                            DM_reset();
                         }
                     } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
                         if ((DM_page - 1) * 7 + 4 < dm_search_result_length) {
                             viewDM_id = dm_search_result[(DM_page - 1) * 7 + 4];
                             scene = 7;
-                            DMreset();
+                            DM_reset();
                         }
                     } else if (IsKeyPressed(KEY_SIX) || IsKeyPressed(KEY_KP_6)) {
                         if ((DM_page - 1) * 7 + 5 < dm_search_result_length) {
                             viewDM_id = dm_search_result[(DM_page - 1) * 7 + 5];
                             scene = 7;
-                            DMreset();
+                            DM_reset();
                         }
                     } else if (IsKeyPressed(KEY_SEVEN) || IsKeyPressed(KEY_KP_7)) {
                         if ((DM_page - 1) * 7 + 6 < dm_search_result_length) {
                             viewDM_id = dm_search_result[(DM_page - 1) * 7 + 6];
                             scene = 7;
-                            DMreset();
+                            DM_reset();
                         }
                     }
                 }
@@ -472,19 +472,19 @@ int main() {
 
             case 7:  // DM view
                 extern DMMessage* viewDM;
-                extern int fromNotif;
+                extern int from_notif;
 
-                printf("DEBUG: viewDMId = %d, dmMessages->len = %d\n", viewDMId, dmMessages->len);
+                printf("DEBUG: viewDMId = %d, dmMessages->len = %d\n", viewDM_id, dm_messages->len);
 
                 viewDM = dm_messages->list[viewDM_id];
                 DMview_screen();
 
                 if (!typing) {
                     if (IsKeyPressed(KEY_B)) {
-                        DMviewReset();
-                        if (fromNotif) {
+                        DMview_reset();
+                        if (from_notif) {
                             scene = 9;
-                            fromNotif = 0;
+                            from_notif = 0;
                         } else {
                             scene = 6;
                         }
@@ -492,140 +492,6 @@ int main() {
                 }
                 break;
 
-            case 9:  // notifications
-                extern int notif_sellected;
-                extern char notif_lines[MAX_LINES][MAX_CONTENT_LEN];
-                extern int notif_count;
-                extern int notif_total_page;
-                extern int current_page;
-                extern char id[LINES_PER_PAGE][3][20];
-                extern int DMtypes;
-                extern int fromNotif;
-
-                strcpy(DMschoolNumber, schoolNumber);
-
-                if (notif_sellected == 1) {
-                    DMListSync();
-                    readNotifFile();
-                    notif_sellected = 0;
-                }
-
-                DrawText(TextFormat("notif_count: %d", notif_count), 20, HEIGHT - 120, 30, BLACK);
-                DrawText(TextFormat("notif_total_page: %d", notif_total_page), 20, HEIGHT - 160, 30, BLACK);
-                DrawText(TextFormat("current_page: %d", current_page), 20, HEIGHT - 200, 30, BLACK);
-
-                NotifScreen();
-
-                if (IsKeyPressed(KEY_B)) {
-                    scene = 3;
-                } else if (IsKeyPressed(KEY_C)) {
-                    clearNotif();
-                    readNotifFile();
-                    notif_count = 0;
-                    notif_total_page = 1;
-                    current_page = 1;
-                } else if (IsKeyPressed(KEY_RIGHT)) {
-                    if (current_page < notif_total_page) current_page++;
-                    readNotifFile();
-                } else if (IsKeyPressed(KEY_LEFT)) {
-                    if (current_page > 1) current_page--;
-                    readNotifFile();
-                } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
-                    DMtypes = 2;
-                    readNotifFile();
-                    if ((current_page - 1) * 5 < notif_count) {
-                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[0][0], id[0][1], atoi(id[0][2]));
-                        notifReset();
-                        scene = 7;
-                        fromNotif = 1;
-                    }
-                } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
-                    DMtypes = 2;
-                    readNotifFile();
-                    if ((current_page - 1) * 5 + 1 < notif_count) {
-                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[1][0], id[1][1], atoi(id[1][2]));
-                        notifReset();
-                        scene = 7;
-                        fromNotif = 1;
-                    }
-                } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
-                    DMtypes = 2;
-                    readNotifFile();
-                    if ((current_page - 1) * 5 + 2 < notif_count) {
-                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[2][0], id[2][1], atoi(id[2][2]));
-                        notifReset();
-                        scene = 7;
-                        fromNotif = 1;
-                    }
-                } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
-                    DMtypes = 2;
-                    readNotifFile();
-                    if ((current_page - 1) * 5 + 3 < notif_count) {
-                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[3][0], id[3][1], atoi(id[3][2]));
-                        notifReset();
-                        scene = 7;
-                        fromNotif = 1;
-                    }
-                } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
-                    DMtypes = 2;
-                    readNotifFile();
-                    if ((current_page - 1) * 5 + 4 < notif_count) {
-                        viewDMId = dmMessages->search_dm_by_elements(dmMessages, id[4][0], id[4][1], atoi(id[4][2]));
-                        notifReset();
-                        scene = 7;
-                        fromNotif = 1;
-                    }
-                }
-                break;
-            
-            // case 8: //DM send
-            //     extern int DMsendSelected;
-            //     extern char DMsendTitle[MAX_TITLE_LEN];
-            //     extern char DMsendContent[MAX_CONTENT_LEN];
-            //     extern char DMsendReceiver[MAX_USERNAME_LEN];
-            //     extern char DMsendSchoolNumber[MAX_USERNAME_LEN];
-
-            //     strcpy(DMsendSchoolNumber, schoolNumber);
-                
-            //     DMsendScreen();
-
-            //     if (typing) {
-            //         if (IsKeyPressed(KEY_ENTER)) {
-            //             typing = false;
-            //             DMsendSelected = 0;
-            //         } else if (IsKeyPressed(KEY_BACKSPACE)) {
-            //             if (DMsendSelected == 1 && strlen(DMsendTitle) > 0)
-            //                 DMsendTitle[strlen(DMsendTitle) - 1] = '\0';
-            //             else if (DMsendSelected == 2 && strlen(DMsendContent) > 0)
-            //                 DMsendContent[strlen(DMsendContent) - 1] = '\0';
-            //         } else {
-            //             // todo: word count limit
-            //             if (DMsendSelected == 1 && strlen(DMsendTitle) < MAX_TITLE_LEN - 1)
-            //                 DMsendTitle[strlen(DMsendTitle)] = GetCharPressed();
-            //             else if (DMsendSelected == 2 && strlen(DMsendContent) < MAX_CONTENT_LEN - 1)
-            //                 DMsendContent[strlen(DMsendContent)] = GetCharPressed();
-            //         }
-            //     } else {
-            //         if (IsKeyPressed(KEY_B)) {
-            //             DMviewReset();
-            //             scene = 5;
-            //         } else if (IsKeyPressed(KEY_T)) {
-            //             typing = true;
-            //             DMsendSelected = 1;
-            //         } else if (IsKeyPressed(KEY_C)) {
-            //             typing = true;
-            //             DMsendSelected = 2;
-            //         } else if (IsKeyPressed(KEY_P)) {
-            //             if (DMsendValid()) {
-            //                 dmMessages->insert_message(dmMessages, DMsendTitle, DMsendContent, DMsendSchoolNumber, DMsendReceiver);
-            //                 save_new_dm(dmMessages->list[dmMessages->len - 1]);
-            //                 DMsendReset();
-            //                 scene = 5;
-            //             }
-            //         }
-            //     }
-            //     break;
-            
             case 8: //DM send
                 extern int DMsend_selected;
                 extern char DMsend_title[MAX_TITLE_LEN];
@@ -655,7 +521,7 @@ int main() {
                     }
                 } else {
                     if (IsKeyPressed(KEY_B)) {
-                        DMviewReset();
+                        DMview_reset();
                         scene = 5;
                     } else if (IsKeyPressed(KEY_T)) {
                         typing = true;
@@ -673,6 +539,95 @@ int main() {
                     }
                 }
                 break;
+
+            case 9:  // notifications
+                extern int notif_sellected;
+                extern char notif_lines[MAX_LINES][MAX_CONTENT_LEN];
+                extern int notif_count;
+                extern int notif_total_page;
+                extern int current_page;
+                extern char id[LINES_PER_PAGE][3][20];
+                extern int DM_types;
+                extern int from_notif;
+
+                strcpy(DM_school_number, school_number);
+
+                if (notif_sellected == 1) {
+                    DMListSync();
+                    read_notif_file();
+                    notif_sellected = 0;
+                }
+
+                DrawText(TextFormat("notif_count: %d", notif_count), 20, HEIGHT - 120, 30, BLACK);
+                DrawText(TextFormat("notif_total_page: %d", notif_total_page), 20, HEIGHT - 160, 30, BLACK);
+                DrawText(TextFormat("current_page: %d", current_page), 20, HEIGHT - 200, 30, BLACK);
+
+                notif_screen();
+
+                if (IsKeyPressed(KEY_B)) {
+                    scene = 3;
+                } else if (IsKeyPressed(KEY_C)) {
+                    clear_notif();
+                    read_notif_file();
+                    notif_count = 0;
+                    notif_total_page = 1;
+                    current_page = 1;
+                } else if (IsKeyPressed(KEY_RIGHT)) {
+                    if (current_page < notif_total_page) current_page++;
+                    read_notif_file();
+                } else if (IsKeyPressed(KEY_LEFT)) {
+                    if (current_page > 1) current_page--;
+                    read_notif_file();
+                } else if (IsKeyPressed(KEY_ONE) || IsKeyPressed(KEY_KP_1)) {
+                    DM_types = 2;
+                    read_notif_file();
+                    if ((current_page - 1) * 5 < notif_count) {
+                        viewDM_id = dm_messages->search_dm_by_elements(dm_messages, id[0][0], id[0][1], atoi(id[0][2]));
+                        notif_reset();
+                        scene = 7;
+                        from_notif = 1;
+                    }
+                } else if (IsKeyPressed(KEY_TWO) || IsKeyPressed(KEY_KP_2)) {
+                    DM_types = 2;
+                    read_notif_file();
+                    if ((current_page - 1) * 5 + 1 < notif_count) {
+                        viewDM_id = dm_messages->search_dm_by_elements(dm_messages, id[1][0], id[1][1], atoi(id[1][2]));
+                        notif_reset();
+                        scene = 7;
+                        from_notif = 1;
+                    }
+                } else if (IsKeyPressed(KEY_THREE) || IsKeyPressed(KEY_KP_3)) {
+                    DM_types = 2;
+                    read_notif_file();
+                    if ((current_page - 1) * 5 + 2 < notif_count) {
+                        viewDM_id = dm_messages->search_dm_by_elements(dm_messages, id[2][0], id[2][1], atoi(id[2][2]));
+                        notif_reset();
+                        scene = 7;
+                        from_notif = 1;
+                    }
+                } else if (IsKeyPressed(KEY_FOUR) || IsKeyPressed(KEY_KP_4)) {
+                    DM_types = 2;
+                    read_notif_file();
+                    if ((current_page - 1) * 5 + 3 < notif_count) {
+                        viewDM_id = dm_messages->search_dm_by_elements(dm_messages, id[3][0], id[3][1], atoi(id[3][2]));
+                        notif_reset();
+                        scene = 7;
+                        from_notif = 1;
+                    }
+                } else if (IsKeyPressed(KEY_FIVE) || IsKeyPressed(KEY_KP_5)) {
+                    DM_types = 2;
+                    read_notif_file();
+                    if ((current_page - 1) * 5 + 4 < notif_count) {
+                        viewDM_id = dm_messages->search_dm_by_elements(dm_messages, id[4][0], id[4][1], atoi(id[4][2]));
+                        notif_reset();
+                        scene = 7;
+                        from_notif = 1;
+                    }
+                }
+                break;
+            
+           
+            
         }
 
         EndDrawing();

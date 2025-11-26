@@ -1,8 +1,8 @@
 #ifndef REGISTER_H
 #define REGISTER_H
 
-void RegisterScreen();
-bool RegisterCheck();
-void RegisterReset();
+void register_screen();
+bool register_check();
+void register_reset();
 
 #endif

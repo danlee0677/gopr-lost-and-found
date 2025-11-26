@@ -10,32 +10,30 @@
 #define MAX_LINES 1024
 #define FILE_NAME_MAX_LEN 100
 #define LINES_PER_PAGE 5
-#define MAX_TITLE_LEN 250
-#define MAX_CONTENT_LEN 1000
 
-extern char schoolNumber[50];
+extern char school_number[50];
 
 int notif_sellected = 1;
 char notif_lines[MAX_LINES][MAX_CONTENT_LEN];
 int notif_count = 0;
 int notif_total_page = 1;
 int current_page = 1;
-int fromNotif = 0;
+int from_notif = 0;
 const char filename[FILE_NAME_MAX_LEN] = "./data/notif.txt";
 char id[LINES_PER_PAGE][3][20];
 char title[LINES_PER_PAGE][MAX_TITLE_LEN];
 char content[LINES_PER_PAGE][MAX_LINES];
-bool notifToDM = false;
+bool notif_to_DM = false;
 
-void NotifScreen() {
+void notif_screen() {
     draw_rectangle(50, 55, WIDTH - 100, 100, TOP_LEFT, BLACK);
     draw_text("Notifications", WIDTH / 2, 110, 70, MIDDLE_CENTER, BLACK);
     draw_rectangle(50, 200, WIDTH / 2 + 570, HEIGHT - 300, TOP_LEFT, BLACK);
 
-    NewRectangle(WIDTH - 50, 200, 250, 120, TOP_RIGHT, BLACK);
-    NewText("Clear\n All (C)", WIDTH - 175, 235, 50, MIDDLE_CENTER, BLACK);
-    NewRectangle(WIDTH - 50, 360, 250, 120, TOP_RIGHT, BLACK);
-    NewText("Back (B)", WIDTH - 175, 420, 50, MIDDLE_CENTER, BLACK);
+    draw_rectangle(WIDTH - 50, 200, 250, 120, TOP_RIGHT, BLACK);
+    draw_text("Clear\n All (C)", WIDTH - 175, 235, 50, MIDDLE_CENTER, BLACK);
+    draw_rectangle(WIDTH - 50, 360, 250, 120, TOP_RIGHT, BLACK);
+    draw_text("Back (B)", WIDTH - 175, 420, 50, MIDDLE_CENTER, BLACK);
 
     float lineGap = (HEIGHT - 290) / 5;
 
@@ -50,14 +48,14 @@ void NotifScreen() {
 
         draw_rectangle(50, 195 + lineGap * i + lineGap / 2, WIDTH / 2 + 570, lineGap - 10, MIDDLE_LEFT, BLACK);
         draw_text(TextFormat("(%d) %s", i + 1, id[i][0]), 70, 175 + lineGap * i + lineGap / 2, 40, MIDDLE_LEFT, BLACK);
-        NewText(TextFormat("%s", title[i]), 70, 175 + lineGap * i + lineGap / 2 + 40, 40, MIDDLE_LEFT, DARKGRAY);
+        draw_text(TextFormat("%s", title[i]), 70, 175 + lineGap * i + lineGap / 2 + 40, 40, MIDDLE_LEFT, DARKGRAY);
     }
 
     draw_text("<-         ->", WIDTH / 4 + 300, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
     draw_text(TextFormat("%d / %d", current_page, notif_total_page), WIDTH / 4 + 300, HEIGHT - 50, 50, MIDDLE_CENTER, BLACK);
 }
 
-void readNotifFile() {
+void read_notif_file() {
     notif_count = 0;
     FILE *nf = fopen("./data/notif.txt", "r");
 
@@ -72,9 +70,9 @@ void readNotifFile() {
         }
 
         sscanf(notif_lines[notif_count], "%s %s %s", id[0][0], id[0][1], id[0][2]);
-        printf("%s %s %d\n", schoolNumber, id[0][1], strcmp(id[0][1], schoolNumber));
+        printf("%s %s %d\n", school_number, id[0][1], strcmp(id[0][1], school_number));
 
-        if (strcmp(id[0][1], schoolNumber) == 0)
+        if (strcmp(id[0][1], school_number) == 0)
             notif_count++;
     }
     fclose(nf);
@@ -103,7 +101,7 @@ void readNotifFile() {
     }
 }
 
-void clearNotif() {
+void clear_notif() {
     notif_count = 0;
     notif_total_page = 1;
     current_page = 1;
@@ -111,7 +109,7 @@ void clearNotif() {
     fclose(f);
 }
 
-void notifReset() {
+void notif_reset() {
     notif_sellected = 1;
     notif_count = 0;
     notif_total_page = 1;

@@ -30,5 +30,5 @@ void DMview_screen() {
     draw_text("Back (B)", WIDTH / 4 + 12.5, HEIGHT - 70, 40, MIDDLE_CENTER, BLACK);
 }
 
-void DMviewReset() {
+void DMview_reset() {
 }

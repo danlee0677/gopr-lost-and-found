@@ -2,6 +2,6 @@
 #define DMview_H
 
 void DMview_screen();
-void DMviewReset();
+void DMview_reset();
 
 #endif
